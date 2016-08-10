@@ -1,0 +1,19 @@
+{
+  "name": "tbd",
+  "version": "0.0.0",
+  "description": "Play digital instruments, like Jam with Chrome",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ColossalBubble/tbd.git"
+  },
+  "author": "\"Frances Yang, Krishan Arya, Greg Roche, Rafael Espinoza\"",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ColossalBubble/tbd/issues"
+  },
+  "homepage": "https://github.com/ColossalBubble/tbd#readme"
+}
