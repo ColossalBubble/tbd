@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/ColossalBubble/tbd/issues"
   },
-  "homepage": "https://github.com/ColossalBubble/tbd#readme"
+  "homepage": "https://github.com/ColossalBubble/tbd#readme",
+  "devDependencies": {
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb": "^10.0.0",
+    "eslint-plugin-import": "^1.12.0",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
+    "eslint-plugin-react": "^6.0.0"
+  }
 }
