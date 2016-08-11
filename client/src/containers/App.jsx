@@ -1,3 +1,5 @@
+import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import React, { Component } from 'react';
 import LandingPage from './LandingPage';
 import Nav from './Nav';
@@ -6,11 +8,18 @@ import Signup from './Signup';
 import SelectInstrument from './SelectInstrument';
 import SelectRoom from './SelectRoom';
 import JamRoom from './JamRoom';
+// for future material ui use
 
 class App extends Component {
   constructor(props) {
     super(props);
+<<<<<<< HEAD
 
+=======
+    this.toggleRoom = this.toggleRoom.bind(this);
+    this.toggleView = this.toggleView.bind(this);
+    this.toggleInstrument=this.toggleInstrument.bind(this);
+>>>>>>> 3268a010c599d7bf7f534e875dbb6d8be001edb7
     this.state = {
       view: "LandingPage",
       instrument: "start",
@@ -21,6 +30,10 @@ class App extends Component {
     this.toggleRoom = this.toggleRoom.bind(this);
     this.toggleView = this.toggleView.bind(this);
     this.toggleInstrument=this.toggleInstrument.bind(this);
+  }
+
+  getChildContext() {
+    return { muiTheme: getMuiTheme(baseTheme) };
   }
 
   toggleInstrument(inst) {
@@ -83,4 +96,9 @@ class App extends Component {
     );
   }
 }
+// For material ui
+App.childContextTypes = {
+  muiTheme: React.PropTypes.object.isRequired,
+};
+
 export default App;
