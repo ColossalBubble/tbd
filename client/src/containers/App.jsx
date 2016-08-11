@@ -48,7 +48,7 @@ class App extends Component {
   toggleRoom(roomType, RoomId) {
     this.setState({
       roomType,
-      RoomId: RoomId?this.state.RoomId:RoomId,
+      RoomId: RoomId ? this.state.RoomId : RoomId,
       view: "selectInstrument",
     });
   }
