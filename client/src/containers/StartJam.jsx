@@ -12,7 +12,7 @@ class StartJam extends Component {
     } else {
       return (
         <div>
-          <button onClick={() => { this.props.change('JamRoom')}}>Start Jamming!</button>
+          <button onClick={() => { this.props.change('JamRoom') }}>Start Jamming!</button>
         </div>
       );
     }
