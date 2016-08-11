@@ -13,13 +13,10 @@ import JamRoom from './JamRoom';
 class App extends Component {
   constructor(props) {
     super(props);
-<<<<<<< HEAD
 
-=======
     this.toggleRoom = this.toggleRoom.bind(this);
     this.toggleView = this.toggleView.bind(this);
     this.toggleInstrument=this.toggleInstrument.bind(this);
->>>>>>> 3268a010c599d7bf7f534e875dbb6d8be001edb7
     this.state = {
       view: "LandingPage",
       instrument: "start",
