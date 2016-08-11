@@ -5,8 +5,8 @@ class Nav extends Component {
   render() {
     return (
       <div>
-        <button onClick={() => { this.props.change('login')}}>Login</button>
-        <button onClick={() => { this.props.change('signup')}}>Signup</button>
+        <button onClick={() => { this.props.change('login') }}>Login</button>
+        <button onClick={() => { this.props.change('signup') }}>Signup</button>
       </div>
     );
   }
