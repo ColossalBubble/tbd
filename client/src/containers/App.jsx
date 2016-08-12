@@ -50,33 +50,6 @@ class App extends Component {
     return (
       <div>
         <Nav />
-        <Link to="/">Home</Link>
-        <Link to="login">Login</Link>
-        <Link to="signup">Signup</Link>
-        <Link to="selectInstrument">Select Instrument</Link>
-        {/*
-          this.state.view==='selectInstrument' ?
-          <SelectInstrument
-            sel={this.toggleInstrument}
-            inst={this.state.instrument}
-            change={this.toggleView}
-          />
-          : null
-        */}
-        <Link to="selectRoom">Select Room</Link>
-        {/*
-          this.state.view==='SelectRoom' ?
-            <SelectRoom rooms={this.toggleRoom} />
-            : null
-        */}
-        <Link to="jam">Jam!</Link>
-        {/*
-          this.state.view==='JamRoom' ?
-            <JamRoom
-              inst={this.state.instrument}
-            />
-            : null
-        */}
         { this.props.children }
       </div>
     );
