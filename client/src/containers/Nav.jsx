@@ -13,8 +13,8 @@ class Nav extends Component {
         <Link to="selectInstrument">Select Instrument</Link>
         <Link to="selectRoom">Select Room</Link>
         <Link to="jam">Jam!</Link>
-        <FlatButton style={{ position: "relative", left: "85%" }} label="Log In" onClick={() => { this.props.change('login')}} />
-        <FlatButton style={{ position: "relative", left: "85%" }} label="Sign In" onClick={() => { this.props.change('signup')}} />
+        <FlatButton style={{ position: "relative", left: "60%" }} label="Log In" onClick={() => { this.props.change('login')}} />
+        <FlatButton style={{ position: "relative", left: "60%" }} label="Sign In" onClick={() => { this.props.change('signup')}} />
       </div>
     );
   }
