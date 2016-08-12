@@ -6,8 +6,9 @@ class Nav extends Component {
   render() {
     return (
       <div id="navBar">
-        <FlatButton label="Log In" onClick={() => { this.props.change('login')}} />
-        <FlatButton label="Sign In" onClick={() => { this.props.change('signup')}} />
+        <FlatButton style={{display:"inline",backgroundColor:"brown",left:"1150px",border:"2px solid black"}} className="logInButton" label="Log In" onClick={() => { this.props.change('login')}} />
+        <FlatButton style={{display:"inline",backgroundColor:"brown",left:"1150px",border:"2px solid black"}}  label="Sign In" onClick={() => { this.props.change('signup')}} />
+      <h1 style={{display:"inline",bottom:"450px"}}>App Logo Here</h1>
       </div>
     );
   }

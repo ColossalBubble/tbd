@@ -10,12 +10,12 @@ class LandingPage extends Component {
 
   render() {
     return (
-      <div >
-        <p>WELCOME TO TBD!</p>
+      <div id='buttonsOnLP'>
+        <p id="LPText">Lorem ipsum do est. </p>
          <br />
         <RaisedButton label="Join Room" style={style} onClick={() => { this.props.change('selectInstrument')}} />
-        <br /><TextField /><br />
-        <RaisedButton label="Create Room" onClick={() => { this.props.change('selectInstrument')}} />
+        <br /><TextField ref="myField" /><br />
+        <RaisedButton label={"Create Room"}  onClick={() => { this.refs.myField.getValue().length===0?null:this.props.change('selectInstrument')}}/>
       </div>
     );
   }

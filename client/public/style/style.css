@@ -1,5 +1,5 @@
 #roche{
-  background-image: url('http://bit.ly/2aMzQ3b');
+  background-image: url('./Background.gif');
   position: absolute;
   width: 100%;
   height: 100%;
@@ -44,8 +44,6 @@
   left:280px;
 }
 
-
-
 .key{
   border-style: solid;
   border-color: black;
@@ -55,3 +53,26 @@
   height:250px;
   width:40px;
 }
+
+
+#LPText{
+color:blue;
+font-weight:bold;
+
+}
+
+#navBar{
+  background-color:grey;
+  height: 80px;
+}
+
+#pianoChoose{
+
+  opacity: 0.5
+}
+
+#drumsChoose{
+
+  opacity: 0.5
+}
+
