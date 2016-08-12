@@ -1,13 +1,20 @@
 import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
+import { Link } from 'react-router';
 
 class Nav extends Component {
 
   render() {
     return (
       <div id="navBar">
-        <FlatButton label="Log In" onClick={() => { this.props.change('login')}} />
-        <FlatButton label="Sign In" onClick={() => { this.props.change('signup')}} />
+        <Link to="/">Home</Link>
+        <Link to="login">Login</Link>
+        <Link to="signup">Signup</Link>
+        <Link to="selectInstrument">Select Instrument</Link>
+        <Link to="selectRoom">Select Room</Link>
+        <Link to="jam">Jam!</Link>
+        <FlatButton style={{ position: "relative", left: "60%" }} label="Log In" onClick={() => { this.props.change('login')}} />
+        <FlatButton style={{ position: "relative", left: "60%" }} label="Sign In" onClick={() => { this.props.change('signup')}} />
       </div>
     );
   }

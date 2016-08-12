@@ -10,12 +10,14 @@ class LandingPage extends Component {
 
   render() {
     return (
-      <div >
-        <p>WELCOME TO TBD!</p>
-         <br />
-        <RaisedButton label="Join Room" style={style} onClick={() => { this.props.change('selectInstrument')}} />
-        <br /><TextField /><br />
-        <RaisedButton label="Create Room" onClick={() => { this.props.change('selectInstrument')}} />
+      <div id="roche" >
+        <div id="lpActions">
+          <p id="LPText">DESCRIPTION ON THE APP GOES HERE! </p>
+          <br />
+          <RaisedButton  label="Join Room" style={style} onClick={() => { this.props.change('selectInstrument')}} />
+          <br /><TextField /><br />
+          <RaisedButton  label="Create Room" onClick={() => { this.props.change('selectInstrument')}} />
+        </div>
       </div>
     );
   }
