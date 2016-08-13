@@ -1,23 +1,9 @@
 import React, { Component } from 'react';
 import Paper from 'material-ui/Paper';
 import Slider from 'material-ui/Slider';
-import { Loop, Transport, MembraneSynth } from 'tone';
+import { Transport } from 'tone';
 import StartStopButton from './StartStopButton';
-
-const beat = new MembraneSynth({
-  envelope: {
-    sustain: 0,
-    attack: 0.02,
-    decay: 0.8
-  },
-  octaves: 10
-}).toMaster();
-
-const kickOffBeat = (interval) => (
-  new Loop(time => {
-    beat.triggerAttackRelease('C2', '4n', time);
-  }, interval).start()
-);
+import tick from '../../instruments/sounds/tick';
 
 class Metronome extends Component {
   constructor(props) {
@@ -30,7 +16,7 @@ class Metronome extends Component {
       bpm,
       interval,
       transport: Transport.start(),
-      loop: kickOffBeat(interval)
+      loop: tick(interval)
     };
 
     this.changeBPM = this.changeBPM.bind(this);
