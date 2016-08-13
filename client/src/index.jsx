@@ -28,9 +28,8 @@ render((
       <Route path="selectRoom" component={SelectRoom} />
       <Route path="jam" component={JamRoom} />
       <Route path="room/:roomId" component={Room} />
-      <Route path="*" component={Invalid} />
-      { /* for testing metronome */ }
       <Route path="metronome" component={Metronome} />
+      <Route path="*" component={Invalid} />
     </Route>
   </Router>
 ), document.getElementById('app'));
