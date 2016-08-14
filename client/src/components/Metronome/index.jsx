@@ -5,6 +5,13 @@ import { Transport } from 'tone';
 import StartStopButton from './StartStopButton';
 import tick from '../../instruments/sounds/tick';
 
+/**
+  * Represents the Metronome's sound. IE:
+  * The color, duration, offset & connection to the main sound output
+  * Whereas, `Transport` is a centralized time manager.
+  */
+const Tick = tick();
+
 class Metronome extends Component {
   constructor(props) {
     super(props);
@@ -14,9 +21,7 @@ class Metronome extends Component {
 
     this.state = {
       bpm,
-      interval: '4n', // quarter note
-      transport: Transport,
-      loop: tick()
+      interval: '4n' // quarter note
     };
 
     this.changeBPM = this.changeBPM.bind(this);
@@ -26,13 +31,13 @@ class Metronome extends Component {
   }
 
   start() {
-    this.state.transport.start();
-    this.state.loop.start();
+    Transport.start();
+    Tick.start();
   }
 
   stop() {
-    this.state.transport.stop();
-    this.state.loop.stop();
+    Transport.stop();
+    Tick.stop();
   }
 
   changeBPM(_event, value) {
@@ -41,9 +46,7 @@ class Metronome extends Component {
   }
 
   toggle() {
-    const transport = this.state.transport;
-
-    if (transport.state !== 'started') {
+    if (Transport.state !== 'started') {
       this.start();
     } else {
       this.stop();
