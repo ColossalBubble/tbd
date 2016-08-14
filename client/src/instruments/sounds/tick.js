@@ -9,10 +9,10 @@ const beat = new MembraneSynth({
   octaves: 10
 }).toMaster();
 
-const tick = (interval) => (
+const tick = () => (
   new Loop(time => {
-    beat.triggerAttackRelease('C2', '4n', time);
-  }, interval).start()
+    beat.triggerAttackRelease('C2', '8n', time);
+  })
 );
 
 export default tick;

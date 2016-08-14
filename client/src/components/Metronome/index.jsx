@@ -11,12 +11,13 @@ class Metronome extends Component {
 
     const bpm = 60;
     const interval = '4n'; // quarter note
+    Transport.bpm.value = bpm;
 
     this.state = {
       bpm,
       interval,
-      transport: Transport.start(),
-      loop: tick(interval)
+      transport: Transport,
+      loop: tick()
     };
 
     this.changeBPM = this.changeBPM.bind(this);
@@ -26,19 +27,19 @@ class Metronome extends Component {
   }
 
   componentDidMount() {
-    const transport = this.state.transport;
-    console.log(transport.state);
-    transport.start();
+    console.log(this.state.bpm);
   }
 
   start() {
     console.log('pressed start');
     this.state.transport.start();
+    this.state.loop.start();
   }
 
   stop() {
     console.log('pressed stop');
     this.state.transport.stop();
+    this.state.loop.stop();
   }
 
   changeBPM(_event, value) {
