@@ -52,7 +52,7 @@ function makePeerConnections(room, done, onData, onConnect, onClose) {
     peer.on('signal', data => {
       // prevent destroyed peers from sending signals, janky fix
       if (!peer.destroyed) {
-        socket.emit('offer', { offer: data, by: socket.id, to: sockets[number] });
+        socket.emit('offer', { offer: data, room, by: socket.id, to: sockets[number] });
       }
     });
 
@@ -95,23 +95,13 @@ function makePeerConnections(room, done, onData, onConnect, onClose) {
     const peer = new SimplePeer(Object.assign(options, { initiator: false }));
     peerConnections[initiatorId] = { peer, connected: false, by: initiatorId, to: socket.id };
     peer.on('signal', data => {
-      socket.emit('answer', { answer: data, by: socket.id, to: initiatorId });
+      socket.emit('answer', { answer: data, room, by: socket.id, to: initiatorId });
     });
 
     socket.on('offer', data => {
       // prevent destroyed peer from signalling
       if (data.to === socket.id && !peer.destroyed) {
         peer.signal(data.offer);
-      }
-    });
-
-    socket.on('answer', data => {
-      if (data.to === socket.id) {
-        const connection = peerConnections[data.by];
-        if (!connection.connected) {
-          connection.peer.signal(data.answer);
-          connection.connected = true;
-        }
       }
     });
 
