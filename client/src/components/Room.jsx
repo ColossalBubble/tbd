@@ -1,7 +1,6 @@
 // Modules
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import classnames from 'classnames';
 
 // Components
 import SelectInstrument from '../components/SelectInstrument';
@@ -77,15 +76,13 @@ class Room extends React.Component {
   }
 
   render() {
-    const opacity = instrument => classnames({ selected: this.state.instrument === instrument }, 'instrument');
-
     return (
       <div className="room">
         {
           this.state.startJam ?
             <JamRoom instrument={this.state.instrument} peers={this.state.peerConnections} /> :
             <div className="selectInstrument">
-              <SelectInstrument handleClick={this.selectInstrument} opacity={opacity} />
+              <SelectInstrument handleClick={this.selectInstrument} />
               <RaisedButton
                 style={{ bottom: 0, position: "absolute" }}
                 label="Start"

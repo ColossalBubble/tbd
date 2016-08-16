@@ -11,10 +11,9 @@ const Logo = () => (
   </div>
 );
 
-const SelectPiano = ({ handleClick, opacity }) => (
-  <div className={opacity('piano')}>
+const SelectPiano = ({ handleClick }) => (
+  <div id="pianoChoose">
     <img
-      id="pianoChoose"
       src="http://handlinpiano2.codyhandlin.com/wp-content/uploads/2016/06/grandepiano_2.png"
       alt="piano"
       onClick={handleClick.bind(null, 'piano')}
@@ -22,10 +21,9 @@ const SelectPiano = ({ handleClick, opacity }) => (
   </div>
 );
 
-const SelectDrums = ({ handleClick, opacity }) => (
-  <div className={opacity('drums')}>
+const SelectDrums = ({ handleClick }) => (
+  <div id="drumsChoose">
     <img
-      id="drumsChoose"
       src="http://www.vancouvertop40radio.com/Images/Clip%20Art/drumset.gif"
       alt="drums"
       onClick={handleClick.bind(null, 'drums')}
@@ -33,10 +31,9 @@ const SelectDrums = ({ handleClick, opacity }) => (
   </div>
 );
 
-const SelectFry = ({ handleClick, opacity }) => (
-  <div className={opacity('fry')}>
+const SelectFry = ({ handleClick }) => (
+  <div id="fryChoose">
     <img
-      id="fryChoose"
       src="http://i.stack.imgur.com/STEuc.png"
       alt="fry"
       onClick={handleClick.bind(null, 'fry')}
@@ -44,7 +41,7 @@ const SelectFry = ({ handleClick, opacity }) => (
   </div>
 );
 
-const SelectInstrument = ({ handleClick, opacity }) => {
+const SelectInstrument = ({ handleClick }) => {
   const settings = {
     dots: true,
     centerMode: true
@@ -53,16 +50,15 @@ const SelectInstrument = ({ handleClick, opacity }) => {
   return (
     <Carousel {...settings}>
       <div><Logo /></div>
-      <div><SelectPiano handleClick={handleClick} opacity={opacity} /></div>
-      <div><SelectDrums handleClick={handleClick} opacity={opacity} /></div>
-      <div><SelectFry   handleClick={handleClick} opacity={opacity} /></div>
+      <div><SelectPiano handleClick={handleClick} /></div>
+      <div><SelectDrums handleClick={handleClick} /></div>
+      <div><SelectFry   handleClick={handleClick} /></div>
     </Carousel>
   );
 };
 
 SelectInstrument.propTypes = {
   handleClick: React.PropTypes.func.isRequired,
-  opacity: React.PropTypes.func
 };
 
 // SelectInstrument.childContextTypes = {
