@@ -41,28 +41,21 @@ const SelectFry = ({ handleClick }) => (
   </div>
  );
 
+// Note: images need to be the same height
 const SelectInstrument = ({ handleClick }) => {
   const settings = {
     dots: true,
-    fade: true,
     centerMode: true,
-    //className: 'center',
-    //infinite: true,
-    //centerPadding: '60px',
-    //slidesToShow: 3,
-    //speed: 500,
+    infinite: true,
   };
 
   return (
     <section className="carousel">
       <div><Logo /></div>
       <Carousel {...settings}>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide1"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide2"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide3"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide4"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide5"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide6"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=Piano"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=Drums"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=Fry"/>
       </Carousel>
     </section>
   );
