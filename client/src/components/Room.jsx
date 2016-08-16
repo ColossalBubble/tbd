@@ -78,12 +78,13 @@ class Room extends React.Component {
 
   render() {
     const opacity = instrument => classnames({ selected: this.state.instrument === instrument }, 'instrument');
+
     return (
-      <div>
+      <div className="room">
         {
           this.state.startJam ?
             <JamRoom instrument={this.state.instrument} peers={this.state.peerConnections} /> :
-            <div>
+            <div className="selectInstrument">
               <SelectInstrument handleClick={this.selectInstrument} opacity={opacity} />
               <RaisedButton
                 style={{ bottom: 0, position: "absolute" }}
