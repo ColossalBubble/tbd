@@ -39,21 +39,32 @@ const SelectFry = ({ handleClick }) => (
       onClick={handleClick.bind(null, 'fry')}
     />
   </div>
-);
+ );
 
 const SelectInstrument = ({ handleClick }) => {
   const settings = {
     dots: true,
-    centerMode: true
+    fade: true,
+    centerMode: true,
+    //className: 'center',
+    //infinite: true,
+    //centerPadding: '60px',
+    //slidesToShow: 3,
+    //speed: 500,
   };
 
   return (
-    <Carousel {...settings}>
+    <section className="carousel">
       <div><Logo /></div>
-      <div><SelectPiano handleClick={handleClick} /></div>
-      <div><SelectDrums handleClick={handleClick} /></div>
-      <div><SelectFry   handleClick={handleClick} /></div>
-    </Carousel>
+      <Carousel {...settings}>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide1"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide2"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide3"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide4"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide5"/>
+        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=slide6"/>
+      </Carousel>
+    </section>
   );
 };
 
