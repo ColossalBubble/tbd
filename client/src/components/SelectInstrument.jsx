@@ -51,14 +51,12 @@ const SelectInstrument = ({ handleClick, opacity }) => {
   };
 
   return (
-    <div id="selectInstrumentRoom">
-      <Carousel {...settings}>
-        <div><Logo /></div>
-        <div><SelectPiano handleClick={handleClick} opacity={opacity} /></div>
-        <div><SelectDrums handleClick={handleClick} opacity={opacity} /></div>
-        <div><SelectFry   handleClick={handleClick} opacity={opacity} /></div>
-      </Carousel>
-    </div>
+    <Carousel {...settings}>
+      <div><Logo /></div>
+      <div><SelectPiano handleClick={handleClick} opacity={opacity} /></div>
+      <div><SelectDrums handleClick={handleClick} opacity={opacity} /></div>
+      <div><SelectFry   handleClick={handleClick} opacity={opacity} /></div>
+    </Carousel>
   );
 };
 
