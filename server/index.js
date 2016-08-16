@@ -4,7 +4,7 @@ const path = require('path');
 const logger = require('morgan');
 const http = require('http');
 const socketIO = require('socket.io');
-
+const db = require('./db/connection.js');
 /* Init */
 const app = express();
 const server = http.createServer(app);
@@ -62,6 +62,12 @@ io.on('connection', socket => {
   socket.on('answer', data => {
     socket.broadcast.emit('answer', data);
   });
+
+socket.on('createUser', data => {
+  console.log(data);
+  //
+  });
+
 });
 
 /* Routes */
