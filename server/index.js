@@ -28,51 +28,50 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new FacebookStrategy({
-    clientID: '1014211832028342',
-    clientSecret: 'ac6ae8a72885b86270805337f66e83e6',
-    callbackURL: "http://localhost:3000/auth/facebook/callback"
-  },
+  clientID: '1014211832028342',
+  clientSecret: 'ac6ae8a72885b86270805337f66e83e6',
+  callbackURL: "http://localhost:3000/auth/facebook/callback"
+},
 
-  function(accessToken, refreshToken, profile, done) {
-   console.log('this is the profile', profile.id);
-   users.findAll({where: { facebookId: profile.id }
+  (accessToken, refreshToken, profile, done) => {
+    console.log('this is the profile', profile.id);
+    users.findAll({ where: { facebookId: profile.id }
   }).then(user => {
-      if (user.map(ind => {
-        return ind.dataValues;
-      }).length > 0) {
-       console.log('user already exists', user[0]);
-     return done(null, user);
-      } else {
-        users.create({
-          userName: profile.name.givenName + ' ' + profile.name.familyName,
-          password: "N/A",
-          facebookId:profile.id,
-          token:accessToken,
-        }).then(entry => {
-console.log('this is entry for a newly added user', entry.dataValues.id);
-          console.log(entry.dataValues, ' got entered', entry);
-             return done(null, entry.dataValues.id);
-        });
-      }
-    });
+    if (user.map(ind => {
+      return ind.dataValues;
+    }).length > 0) {
+      console.log('user already exists', user[0]);
+      return done(null, user);
+    } else {
+      users.create({
+        userName: ` ${profile.name.givenName} ${profile.name.familyName}`,
+        password: "N/A",
+        facebookId: profile.id,
+        token: accessToken,
+      }).then(entry => {
+        console.log('this is entry for a newly added user', entry.dataValues.id);
+        console.log(entry.dataValues, ' got entered', entry);
+        return done(null, entry.dataValues.id);
+      });
+    }
+  });
   }
 ));
 
 
 // serialize and deserialize
-passport.serializeUser(function(user, done) {
-const final = typeof user==="number"?user:user[0].dataValues.id
-
-  console.log('this is the user param',user);
+passport.serializeUser((user, done) => {
+  const final = typeof user==="number"?user:user[0].dataValues.id;
+  console.log('this is the user param', user);
   console.log('serializing!!!', final);
   done(null, final);
 });
 
-passport.deserializeUser(function (id, done) {
+passport.deserializeUser((id, done) => {
   console.log('this is id in deserialize', id);
-  users.findAll({where: {id:id} }).then(found => {
-    console.log('im trying to des this user', found[0].dataValues)
-     done(null, id);
+  users.findAll({ where: { id: id } }).then(found => {
+    console.log('im trying to des this user', found[0].dataValues);
+    done(null, id);
   });
 });
 
@@ -106,8 +105,22 @@ io.on('connection', socket => {
           socketsInRoom.splice(socketsInRoom.indexOf(socket.id.slice(2)), 1);
           console.log('disconnecting', socketsInRoom, socket.id);
           socket.leave(room);
-        });
-      }
+          socket.broadcast.to(room).emit('remove connection', id);
+        }
+      });
+    }
+  });
+
+  socket.on('exit room', data => {
+    const room = rooms[data.room];
+    if (room !== undefined) {
+      const index = room.indexOf(data.id);
+      console.log('exit room', data);
+      room.splice(index, 1);
+      socket.leave(data.room);
+      // socket.broadcast.to(`/#${data.id}`).emit('close');
+      console.log(rooms[data.room]);
+      socket.broadcast.to(data.room).emit('remove connection', data.id);
     }
   });
 
@@ -119,14 +132,13 @@ io.on('connection', socket => {
   socket.on('answer', data => {
     socket.broadcast.emit('answer', data);
   });
-
 });
 
 /* Routes */
-app.get('/logout', function(req, res){
-  console.log('mysession',req.session);
+app.get('/logout', (req, res) => {
+  console.log('mysession', req.session);
   req.logout();
-    console.log('mysession after logout', req.session);
+  console.log('mysession after logout', req.session);
   res.send('N/A!');
 });
 
@@ -138,44 +150,41 @@ app.post('/login', (req, res) => {
     }
   }).then(user => {
     if (user.map(ind => {
-        return ind.dataValues;
-      }).length > 0) {
+      return ind.dataValues;
+    }).length > 0) {
       console.log("succ logged in");
-      //req.mySession.user = req.body.user;
       req.session.userName = req.body.user;
       res.send("Succ");
     } else {
       console.log('BadLogin');
-      console.log('req.session',req.session)
+      console.log('req.session', req.session);
       res.send("BadLogin");
     }
   });
 });
 
 
-app.post('/signup', (req,res) =>{
-users.findAll({
-      where: {
-        userName: req.body.user
-      }
-    }).then(user => {
-      if (user.map(ind => {
-        return ind.dataValues;
-      }).length > 0) {
-       res.send('UserAlreadyExists');
-      } else {
-        users.create({
-          userName: req.body.user,
-          password: req.body.pass
-        }).then(entry => {
-          //req.mySession.user = req.body.user;
-          console.log(entry.dataValues, ' got entered');
-           req.session.userName = req.body.user;
-           res.send('SuccessSignup');
-        });
-      }
-    });
-
+app.post('/signup', (req, res) => {
+  users.findAll({
+    where: {
+      userName: req.body.user
+    }
+  }).then(user => {
+    if (user.map(ind => {
+      return ind.dataValues;
+    }).length > 0) {
+      res.send('UserAlreadyExists');
+    } else {
+      users.create({
+        userName: req.body.user,
+        password: req.body.pass
+      }).then(entry => {
+        console.log(entry.dataValues, ' got entered');
+        req.session.userName = req.body.user;
+        res.send('SuccessSignup');
+      });
+    }
+  });
 });
 
 
@@ -198,7 +207,3 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log('Listening on port', port);
 });
-
-
-
-

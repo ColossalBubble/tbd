@@ -3,7 +3,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router';
 import TextField from 'material-ui/TextField';
 import $ from 'jquery';
-import { socket } from '../peer';
 
 class Signup extends Component {
 
@@ -15,11 +14,10 @@ class Signup extends Component {
   helperSignup() {
     const user=$('#UNSignUp').val();
     const pass= $('#UNSPass').val();
-   $.post("/signup", { user: user, pass: pass }, (resp) => {
+    $.post("/signup", { user: user, pass: pass }, (resp) => {
+      console.log(resp);
       if (resp==="SuccessSignup") {
-        console.log(this.props.logIn);
         this.props.logIn();
-        console.log()
         this.context.router.push('/');
       }
     });
@@ -30,9 +28,9 @@ class Signup extends Component {
       <div id="signupContent">
 
         Username:<TextField id="UNSignUp" type="text" /><br />
-        Password:<TextField  id="UNSPass" type="password" /><br />
-        <RaisedButton label="Signup" onClick={() => {this.helperSignup()}} />
-          <Link to="login" ><RaisedButton label="Click to Login Instead"  /> </Link >
+        Password:<TextField id="UNSPass" type="password" /><br />
+        <RaisedButton label="Signup" onClick={() => { this.helperSignup(); }} />
+        <Link to="login" ><RaisedButton label="Click to Login Instead" /> </Link >
       </div>
     );
   }

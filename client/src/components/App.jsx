@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+
 // for future material ui use
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
@@ -31,13 +31,13 @@ class App extends Component {
   }
 
   render() {
-    const children = React.Children.map(this.props.children, (child) => {
+    const children = React.Children.map(this.props.children, child => {
       return React.cloneElement(child, {
         loggedIn: this.state.loggedIn,
         logIn: this.logIn,
         logOut: this.logOut,
       });
-  });
+    });
     return (
       <div>
         <Nav logIn={this.logIn} logOut={this.logOut} loggedIn={this.state.loggedIn} title={'tbd'} />

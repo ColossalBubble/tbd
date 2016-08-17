@@ -1,17 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
 import $ from 'jquery';
-import { socket } from '../peer';
-import sound from '../instruments/sounds/wimbal';
-import {test} from '../instruments/sounds/wimbal';
-
-
-
-
-
-
-
-
 
 class UserMakeInstrument extends Component {
 
@@ -21,40 +9,39 @@ class UserMakeInstrument extends Component {
   }
 
   componentDidMount() {
-    for (var i=0;i<6;i++){
-  $("#UserMakeInstrumentRoom").append(`<div id="selectKeys_${i}"> <form>
-    <select name="cars">
-    <option value="Q">Q</option>
-    <option value="W">W</option>
-    <option value="E">E</option>
-    <option value="R">R</option>
-    <option value="T">T</option>
-     <option value="Y">Y</option>
-  </select>
-</form>
+    let i;
+    for (i=0; i<6; i++) {
+      $("#UserMakeInstrumentRoom").append(`
+        <div id="selectKeys_${i}"> 
+          <form>
+            <select name="cars">
+              <option value="Q">Q</option>
+              <option value="W">W</option>
+              <option value="E">E</option>
+              <option value="R">R</option>
+              <option value="T">T</option>
+              <option value="Y">Y</option>
+            </select>
+          </form>
 
-  <form>
-  <input id="key_${i}" type="file" name="pic" accept="audio/*" />
- 
-  </form> </div>`);
-}
+        <form>
+        <input id="key_${i}" type="file" name="pic" accept="audio/*" />
+       
+        </form> 
+      </div>`);
+    }
    console.log('youre about to make your own instrument!');
   }
 
   render() {
     return (
-      <div id = "UserMakeInstrumentRoom">
+      <div id="UserMakeInstrumentRoom">
         Select a Key--- Select a Sound
-<button>Select!</button>
+        <button>Make the Instrument!</button>
       </div>
     );
   }
 }
-
-
-
-
-
 
 UserMakeInstrument.propTypes = {
   params: React.PropTypes.object
