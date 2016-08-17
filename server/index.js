@@ -6,12 +6,13 @@ const http = require('http');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+const sessions = require("client-sessions");
 const FacebookStrategy = require('passport-facebook').Strategy;
+
 /* Init */
 const app = express();
 const server = http.createServer(app);
 const io = socketIO.listen(server);
-
 /* DB  */
 const users = require('./db/connection').users;
 
@@ -21,9 +22,8 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
-
 app.use(express.static(pathToStaticDir));
+app.use(express.session({ secret: 'keyboard cat' }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -32,6 +32,7 @@ passport.use(new FacebookStrategy({
     clientSecret: 'ac6ae8a72885b86270805337f66e83e6',
     callbackURL: "http://localhost:3000/auth/facebook/callback"
   },
+
   function(accessToken, refreshToken, profile, done) {
    console.log('this is the profile', profile.id);
    users.findAll({where: { facebookId: profile.id }
@@ -39,7 +40,7 @@ passport.use(new FacebookStrategy({
       if (user.map(ind => {
         return ind.dataValues;
       }).length > 0) {
-       console.log('user alredy exists',user);
+       console.log('user already exists', user[0]);
      return done(null, user);
       } else {
         users.create({
@@ -48,33 +49,32 @@ passport.use(new FacebookStrategy({
           facebookId:profile.id,
           token:accessToken,
         }).then(entry => {
-
-          console.log(entry.dataValues, ' got entered',user);
-             return done(null, user);
+console.log('this is entry for a newly added user', entry.dataValues.id);
+          console.log(entry.dataValues, ' got entered', entry);
+             return done(null, entry.dataValues.id);
         });
       }
     });
   }
 ));
 
+
 // serialize and deserialize
 passport.serializeUser(function(user, done) {
-  console.log('serializing!!!',user);
-  done(null, user);
+const final = typeof user==="number"?user:user[0].dataValues.id
+
+  console.log('this is the user param',user);
+  console.log('serializing!!!', final);
+  done(null, final);
 });
 
-// passport.deserializeUser(function(id, done) {
-//   console.log(id);
-//   User.findById(id, function(err, user) {
-//     done(err, user);
-//   });
-// })
-
-
-
-
-/* Sockets */
-
+passport.deserializeUser(function (id, done) {
+  console.log('this is id in deserialize', id);
+  users.findAll({where: {id:id} }).then(found => {
+    console.log('im trying to des this user', found[0].dataValues)
+     done(null, id);
+  });
+});
 
 const rooms = {};
 io.on('connection', socket => {
@@ -139,7 +139,8 @@ app.post('/login', (req, res) => {
         return ind.dataValues;
       }).length > 0) {
       console.log("succ logged in");
-      res.send("Succ")
+      //req.mySession.user = req.body.user;
+      res.send("Succ");
     } else {
       console.log('BadLogin');
       res.send("BadLogin");
@@ -163,6 +164,7 @@ users.findAll({
           userName: req.body.user,
           password: req.body.pass
         }).then(entry => {
+          //req.mySession.user = req.body.user;
           console.log(entry.dataValues, ' got entered');
            res.send('SuccessSignup');
         });
