@@ -60,6 +60,11 @@ class Room extends React.Component {
     window.addEventListener('keydown', this.handleKeydown);
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
+    socket.emit('exit room', { room: this.props.params.roomId, id: socket.id });
+  }
+
   selectInstrument(instrument) {
     this.setState({ instrument });
   }
