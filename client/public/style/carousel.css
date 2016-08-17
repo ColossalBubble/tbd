@@ -1,0 +1,10 @@
+button.slick-arrow.slick-prev {
+  position: absolute;
+  top: 42%;
+}
+
+button.slick-arrow.slick-next {
+  position: absolute;
+  top: 42%;
+  right:8px
+}

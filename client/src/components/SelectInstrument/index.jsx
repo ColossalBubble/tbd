@@ -44,7 +44,6 @@ const SelectFry = ({ handleClick }) => (
 // Note: images need to be the same height
 const SelectInstrument = ({ handleClick }) => {
   const multipleSettings = {
-    dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -69,7 +68,7 @@ const SelectInstrument = ({ handleClick }) => {
   return (
     <section className="carousel">
       <div><Logo /></div>
-      <Carousel {...centerSettings}>
+      <Carousel {...multipleSettings}>
         <img style={imgStyles} src="http://placehold.it/640x360/ffffff/c0392b/&text=Piano"/>
         <img style={imgStyles} src="http://placehold.it/640x360/ffffff/c0392b/&text=Drums"/>
         <img style={imgStyles} src="http://placehold.it/640x360/ffffff/c0392b/&text=Fry"/>
