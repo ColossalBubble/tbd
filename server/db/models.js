@@ -11,6 +11,9 @@ const users = sequelize.define('user', {
   },
   facebookId: {
     type: Sequelize.STRING
+  },
+  token: {
+  type: Sequelize.STRING
   }
 }, {
   tableName: 'users',

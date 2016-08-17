@@ -18,23 +18,14 @@ const users = require('./db/connection').users;
 /* Middleware */
 
 app.use(logger('dev'));
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+
 app.use(express.static(pathToStaticDir));
 app.use(passport.initialize());
 app.use(passport.session());
-
-
-
-// serialize and deserialize
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
 
 passport.use(new FacebookStrategy({
     clientID: '1014211832028342',
@@ -48,22 +39,37 @@ passport.use(new FacebookStrategy({
       if (user.map(ind => {
         return ind.dataValues;
       }).length > 0) {
-       console.log('failure');
-     return done(null, false);
+       console.log('user alredy exists',user);
+     return done(null, user);
       } else {
         users.create({
-          userName: "Anon",
-          password: "XXX",
+          userName: profile.name.givenName + ' ' + profile.name.familyName,
+          password: "N/A",
           facebookId:profile.id,
+          token:accessToken,
         }).then(entry => {
 
-          console.log(entry.dataValues, ' got entered');
+          console.log(entry.dataValues, ' got entered',user);
              return done(null, user);
         });
       }
     });
   }
 ));
+
+// serialize and deserialize
+passport.serializeUser(function(user, done) {
+  console.log('serializing!!!',user);
+  done(null, user);
+});
+
+// passport.deserializeUser(function(id, done) {
+//   console.log(id);
+//   User.findById(id, function(err, user) {
+//     done(err, user);
+//   });
+// })
+
 
 
 
@@ -117,7 +123,10 @@ io.on('connection', socket => {
 });
 
 /* Routes */
-
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 app.post('/login', (req, res) => {
   users.findAll({
