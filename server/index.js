@@ -23,7 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
 app.use(express.static(pathToStaticDir));
-app.use(express.session({ secret: 'keyboard cat' }));
+app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -124,7 +124,10 @@ io.on('connection', socket => {
 
 /* Routes */
 app.get('/logout', function(req, res){
+  console.log('mysession', req.session.passport.user);
   req.logout();
+    console.log('mysession after logout', req.session.passport.user);
+
   res.redirect('/');
 });
 
