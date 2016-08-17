@@ -19,56 +19,65 @@ app.use(express.static(pathToStaticDir));
 
 /* Sockets */
 
-
 const rooms = {};
+
 io.on('connection', socket => {
   console.log('Socket connected with ID: ', socket.id);
-
+  
   socket.on('create room', roomId => {
     rooms[roomId] = [];
   });
 
   socket.on('join', room => {
+    console.log(socket.id, 'joining', room);
+    // does room exist?
     if (!rooms[room]) {
-      // send socket message to user?
       io.to(socket.id).emit('invalid room');
+    // is room full?
+    } else if (rooms[room].length >= 4) {
+      socket.emit('full', room);
     } else {
-      rooms[room] = rooms[room] || [];
+      socket.join(room);
+      rooms[room].push(socket.id.slice(2));
+      console.log('room is', rooms[room]);
+      // emit message to socket which just joined
+      io.to(socket.id).emit('joined', rooms[room]);
+      // emit message to other sockets in room
+      socket.broadcast.to(room).emit('new peer');
 
-      const numberOfClients = rooms[room].length;
-      if (numberOfClients >= 4) {
-        socket.emit('full', room);
-      } else {
-        socket.join(room);
-        rooms[room] = rooms[room] || [];
-        rooms[room].push(socket.id.slice(2));
-        io.to(room).emit('new.peer', rooms[room]);
-
-        socket.on('disconnect', () => {
-          console.log('Socket disconnected with ID: ', socket.id);
-          const socketsInRoom = rooms[room];
-          const index = socketsInRoom.indexOf(socket.id.slice(2));
-          if (index > -1) {
-            socketsInRoom.splice(index, 1);
-            socket.leave(room);
-          }
-        });
-      }
+      socket.on('disconnect', () => {
+        const socketsInRoom = rooms[room];
+        const id = socket.id.slice(2);
+        const index = socketsInRoom.indexOf(id);
+        if (index > -1) {
+          console.log('disconnect', id);
+          socketsInRoom.splice(index, 1);
+          socket.leave(room);
+          socket.broadcast.to(room).emit('remove connection', id);
+        }
+      });
+    }
+  });
+ 
+  socket.on('exit room', data => {
+    const room = rooms[data.room];
+    if (room !== undefined) {
+      const index = room.indexOf(data.id);
+      console.log('exit room', data);
+      room.splice(index, 1);
+      socket.leave(data.room);
+      // socket.broadcast.to(`/#${data.id}`).emit('close');
+      console.log(rooms[data.room]);
+      socket.broadcast.to(data.room).emit('remove connection', data.id);
     }
   });
 
-  socket.on('exit room', data => {
-    const room = rooms[data.room];
-    const index = room.indexOf(data.id);
-    room.splice(index, 1);
-  });
-
   socket.on('offer', offer => {
-    socket.broadcast.to(`/#${offer.to}`).emit('offer', offer);
+    io.to(`/#${offer.to}`).emit('offer', offer);
   });
 
   socket.on('answer', answer => {
-    socket.broadcast.to(`/#${answer.to}`).emit('answer', answer);
+    io.to(`/#${answer.to}`).emit('answer', answer);
   });
 });
 

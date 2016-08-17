@@ -33,7 +33,7 @@ const manager = {
   },
 
   offMessage: cb => {
-    emitter.off('message', cb);
+    emitter.removeListener('message', cb);
   },
 
   onStatusChange: cb => {
@@ -41,7 +41,11 @@ const manager = {
   },
 
   offStatusChange: cb => {
-    emitter.off('status', cb);
+    emitter.removeListener('status', cb);
+  },
+
+  closeConnection: () => {
+    connection.close();
   }
 };
 

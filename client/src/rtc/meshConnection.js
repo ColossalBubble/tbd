@@ -3,7 +3,7 @@ const EventEmitter = require('events').EventEmitter;
 const io = require('socket.io-client');
 
 const emitter = new EventEmitter();
-const peers = [];
+const peers = {};
 
 // peer connections options
 const options = {
@@ -25,13 +25,12 @@ export default function(room) {
   let selfId;
 
   socket.emit('join', room);
+
   // socket joined a room, start making connections
   socket.on('joined', sockets => {
-    console.log('joined', sockets);
     selfId = sockets.pop();
     // if first one in room, done
     if (sockets.length === 0) {
-      console.log('emit connected');
       emitter.emit('connected');
     } else {
       startConnection(sockets, 0, selfId);
@@ -40,8 +39,11 @@ export default function(room) {
 
   // new socket joined, receive the connection
   socket.on('new peer', () => {
-    console.log('new peer connecting');
     receiveConnection(selfId);
+  });
+
+  socket.on('remove connection', id => {
+    delete peers[id];
   });
 
   return {
@@ -50,11 +52,19 @@ export default function(room) {
     },
 
     send: message => {
-      peers.forEach(peer => { peer.send(message); });
+      each(peers, peer => { peer.send(message); });
     },
 
     onMessage: cb => {
       emitter.on('message', cb);
+    },
+
+    close: () => {
+      socket.emit('exit room', { room, id: selfId });
+      each(peers, (peer, key) => {
+        peer.destroy();
+        delete peers[key];
+      });
     }
   };
 }
@@ -64,22 +74,18 @@ export default function(room) {
 function startConnection(sockets, number, selfId) {
   const peer = new SimplePeer(Object.assign(options, { initiator: true }));
   const remote = sockets[number];
-  console.log('remote is', remote);
   peer.on('signal', data => {
     socket.emit('offer', { offer: data, by: socket.id, to: remote });
   });
 
   socket.on('answer', data => {
-    console.log('got answer', data, 'remote is', remote, 'self is', selfId);
     if (data.to === selfId && data.by === remote) {
       peer.signal(data.answer);
-      console.log(peer);
     }
   });
 
   peer.on('connect', () => {
-    console.log('connected: peer is', peer);
-    peers.push(peer);
+    peers[remote] = peer;
     if (number < sockets.length - 1) {
       startConnection(sockets, ++number, selfId);
     } else {
@@ -97,25 +103,34 @@ function receiveConnection(selfId) {
   let remote;
 
   socket.on('offer', data => {
-    if (data.to === selfId && !peer._channelReady) {
-      console.log('got offer', data);
+    if (data.to === selfId && !peer.connected && !peer.destroyed) {
       remote = data.by;
       peer.signal(data.offer);
     }
   });
 
   peer.on('signal', data => {
-    console.log('sending answer');
     socket.emit('answer', { answer: data, by: socket.id, to: remote });
   });
 
   peer.on('connect', () => {
     emitter.emit('connected');
-    peers.push(peer);
+    peers[remote] = peer;
   });
 
   peer.on('data', message => {
     emitter.emit('message', message);
   });
+
+  emitter.on('close', () => {
+    socket.emit('exit room', selfId);
+    peer.destroy();
+  });
 }
 
+function each(obj, cb) {
+  const keys = Object.keys(obj);
+  for (let i = 0; i < keys.length; i++) {
+    cb(obj[keys[i]], keys[i]);
+  }
+}
