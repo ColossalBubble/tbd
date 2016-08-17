@@ -6,8 +6,8 @@ let connection;
 
 const emitter = new EventEmitter();
 
-function setup() {
-  const conn = meshConnection();
+function setup(room) {
+  const conn = meshConnection(room);
   conn.onReady(() => {
     connection = conn;
     console.log('connection ready');

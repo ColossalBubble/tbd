@@ -21,10 +21,10 @@ const options = {
 
 const socket = io();
 
-export default function() {
+export default function(room) {
   let selfId;
 
-  socket.emit('join', 'test');
+  socket.emit('join', room);
   // socket joined a room, start making connections
   socket.on('joined', sockets => {
     console.log('joined', sockets);
