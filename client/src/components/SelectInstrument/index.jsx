@@ -53,9 +53,9 @@ const SelectInstrument = ({ handleClick }) => {
     <section className="carousel">
       <div><Logo /></div>
       <Carousel {...settings}>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=Piano"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=Drums"/>
-        <img src="http://placehold.it/1000x400/ffffff/c0392b/&text=Fry"/>
+        <img src="http://placehold.it/640x360/ffffff/c0392b/&text=Piano"/>
+        <img src="http://placehold.it/640x360/ffffff/c0392b/&text=Drums"/>
+        <img src="http://placehold.it/640x360/ffffff/c0392b/&text=Fry"/>
       </Carousel>
     </section>
   );
