@@ -8,6 +8,9 @@ const users = sequelize.define('user', {
   },
   password: {
     type: Sequelize.STRING
+  },
+  facebookId: {
+    type: Sequelize.STRING
   }
 }, {
   tableName: 'users',

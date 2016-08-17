@@ -3,7 +3,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import { Link } from 'react-router';
 import $ from 'jquery';
-import { socket } from '../peer';
 
 class Login extends Component {
 
@@ -13,22 +12,16 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    socket.on('BadLogin', msg => {
-      console.log(msg);
-    });
-
-
-    socket.on('SuccessLogin', msg => {
-      console.log(msg);
-      this.context.router.push('/');
-    });
   }
 
   helperLogin() {
     const user=$('#UNLogin').val();
     const pass= $('#UNPass').val();
-    console.log(user, pass);
-    socket.emit('loginUser', { user: user, pass: pass });
+     $.post("/login", { user: user, pass: pass }, (resp) => {
+      if (resp==="Succ") {
+        this.context.router.push('/');
+      }
+    });
   }
 
   render() {

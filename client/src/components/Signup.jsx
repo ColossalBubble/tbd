@@ -26,8 +26,11 @@ constructor(props, context) {
   helperSignup() {
     const user=$('#UNSignUp').val();
     const pass= $('#UNSPass').val();
-    console.log(user, pass);
-    socket.emit('createUser', { user: user, pass: pass });
+   $.post("/signup", { user: user, pass: pass }, (resp) => {
+      if (resp==="SuccessSignup") {
+        this.context.router.push('/');
+      }
+    });
   }
 
   render() {

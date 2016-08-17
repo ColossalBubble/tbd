@@ -4,6 +4,9 @@ const path = require('path');
 const logger = require('morgan');
 const http = require('http');
 const socketIO = require('socket.io');
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
 /* Init */
 const app = express();
 const server = http.createServer(app);
@@ -15,9 +18,55 @@ const users = require('./db/connection').users;
 /* Middleware */
 
 app.use(logger('dev'));
-
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
 app.use(express.static(pathToStaticDir));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+// serialize and deserialize
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+
+passport.use(new FacebookStrategy({
+    clientID: '1014211832028342',
+    clientSecret: 'ac6ae8a72885b86270805337f66e83e6',
+    callbackURL: "http://localhost:3000/auth/facebook/callback"
+  },
+  function(accessToken, refreshToken, profile, done) {
+   console.log('this is the profile', profile.id);
+   users.findAll({where: { facebookId: profile.id }
+  }).then(user => {
+      if (user.map(ind => {
+        return ind.dataValues;
+      }).length > 0) {
+       console.log('failure');
+     return done(null, false);
+      } else {
+        users.create({
+          userName: "Anon",
+          password: "XXX",
+          facebookId:profile.id,
+        }).then(entry => {
+
+          console.log(entry.dataValues, ' got entered');
+             return done(null, user);
+        });
+      }
+    });
+  }
+));
+
+
+
 /* Sockets */
 
 
@@ -65,53 +114,66 @@ io.on('connection', socket => {
     socket.broadcast.emit('answer', data);
   });
 
-  socket.on('createUser', data => {
-    users.findAll({
-      where: {
-        userName: data.user
-      }
-    }).then(user => {
-      if (user.map(ind => {
-        return ind.dataValues;
-      }).length > 0) {
-        io.to(socket.id).emit('UserAlreadyExists', 'User Already Exists');
-      } else {
-        io.to(socket.id).emit('SuccessSignup', 'We added you!');
-
-        users.create({
-          userName: data.user,
-          password: data.pass
-        }).then(entry => {
-          console.log(entry.dataValues, ' got entered');
-        });
-      }
-    });
-  });
-
-  socket.on('loginUser', data => {
-    users.findAll({
-      where: {
-        userName: data.user,
-        password: data.pass
-      }
-    }).then(user => {
-      if (user.map(ind => {
-        return ind.dataValues;
-      }).length > 0) {
-        io.to(socket.id).emit('SuccessLogin', 'Login Succesful');
-      } else {
-        io.to(socket.id).emit('BadLogin', 'Bad Login!');
-      }
-    });
-  });
 });
 
 /* Routes */
 
-app.get('/', (req, res) => {
+
+app.post('/login', (req, res) => {
+  users.findAll({
+    where: {
+      userName: req.body.user,
+      password: req.body.pass
+    }
+  }).then(user => {
+    if (user.map(ind => {
+        return ind.dataValues;
+      }).length > 0) {
+      console.log("succ logged in");
+      res.send("Succ")
+    } else {
+      console.log('BadLogin');
+      res.send("BadLogin");
+    }
+  });
+});
+
+
+app.post('/signup', (req,res) =>{
+users.findAll({
+      where: {
+        userName: req.body.user
+      }
+    }).then(user => {
+      if (user.map(ind => {
+        return ind.dataValues;
+      }).length > 0) {
+       res.send('UserAlreadyExists');
+      } else {
+        users.create({
+          userName: req.body.user,
+          password: req.body.pass
+        }).then(entry => {
+          console.log(entry.dataValues, ' got entered');
+           res.send('SuccessSignup');
+        });
+      }
+    });
+
+});
+
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successRedirect: '/login',
+                                      failureRedirect: '/login' }));
+
+app.get('*', (req, res) => {
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
 });
+
 
 /* Initialize */
 
