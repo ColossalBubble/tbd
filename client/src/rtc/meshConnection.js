@@ -42,23 +42,28 @@ export default function(room) {
     receiveConnection(selfId);
   });
 
+  // another client is leaving, remove this connection from peers
   socket.on('remove connection', id => {
     delete peers[id];
   });
 
   return {
+    // called when peer connections are established
     onReady: cb => {
       emitter.on('connected', cb);
     },
 
+    // sends a message through data channel
     send: message => {
       each(peers, peer => { peer.send(message); });
     },
 
+    // called when message is received through data channel
     onMessage: cb => {
       emitter.on('message', cb);
     },
 
+    // called when this client is leaving, destroy and remove all connections
     close: () => {
       socket.emit('exit room', { room, id: selfId });
       each(peers, (peer, key) => {
@@ -120,13 +125,9 @@ function receiveConnection(selfId) {
   peer.on('data', message => {
     emitter.emit('message', message);
   });
-
-  emitter.on('close', () => {
-    socket.emit('exit room', selfId);
-    peer.destroy();
-  });
 }
 
+// each function for object
 function each(obj, cb) {
   const keys = Object.keys(obj);
   for (let i = 0; i < keys.length; i++) {
