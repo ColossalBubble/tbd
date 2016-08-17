@@ -114,7 +114,6 @@ function receiveConnection(selfId) {
   });
 
   peer.on('connect', () => {
-    emitter.emit('connected');
     peers[remote] = peer;
   });
 

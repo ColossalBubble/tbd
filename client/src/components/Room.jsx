@@ -26,29 +26,25 @@ class Room extends React.Component {
 
     this.updateConnection = this.updateConnection.bind(this);
     this.selectInstrument = this.selectInstrument.bind(this);
-    this.handleKeydown = this.handleKeydown.bind(this);
+    this.handleKeypress = this.handleKeypress.bind(this);
     this.handleStart = this.handleStart.bind(this);
   }
 
   componentDidMount() {
     connectionManager.setup(this.props.params.roomId);
     connectionManager.onStatusChange(this.updateConnection);
-    connectionManager.onMessage(data => {
-      data = JSON.parse(data);
-      store[data.instrument](data.keyPressed);
-    });
 
     socket.on('invalid room', () => {
       this.context.router.push('/invalid');
     });
- 
-    // event listener for keydown
-    window.addEventListener('keydown', this.handleKeydown);
+
+    // event listener for keypress
+    window.addEventListener('keypress', this.handleKeypress);
   }
 
   componentWillUnmount() {
     connectionManager.offStatusChange(this.updateConnection);
-    window.removeEventListener('keydown', this.handleKeydown);
+    window.removeEventListener('keypress', this.handleKeypress);
     connectionManager.closeConnection();
   }
 
@@ -60,16 +56,24 @@ class Room extends React.Component {
     this.setState({ instrument });
   }
 
-  handleKeydown(e) {
-    connectionManager.sendMessage(JSON.stringify({
-      instrument: this.state.instrument,
-      keyPressed: e.key
-    }));
-    store[this.state.instrument](e.key);
+  handleKeypress(e) {
+    if (this.state.startJam) {
+      connectionManager.sendMessage(JSON.stringify({
+        instrument: this.state.instrument,
+        keyPressed: e.key
+      }));
+    }
+    if (this.state.instrument) {
+      store[this.state.instrument](e.key);
+    }
   }
 
   handleStart() {
     this.setState({ startJam: true });
+    connectionManager.onMessage(data => {
+      data = JSON.parse(data);
+      store[data.instrument](data.keyPressed);
+    });
   }
 
   render() {
@@ -78,13 +82,12 @@ class Room extends React.Component {
       <div>
         {
           this.state.startJam ?
-            <JamRoom instrument={this.state.instrument} peers={this.state.peerConnections} />:
+            <JamRoom instrument={this.state.instrument} peers={this.state.peerConnections} /> :
             <div>
               <SelectInstrument handleClick={this.selectInstrument} opacity={opacity} />
               <RaisedButton
                 style={{ bottom: 0, position: "absolute" }}
                 label="Start"
-                style={{ bottom: '0', position: 'absolute' }}
                 onClick={this.handleStart}
                 disabled={!this.state.connected || !this.state.instrument}
               />
