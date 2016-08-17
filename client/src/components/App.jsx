@@ -24,6 +24,7 @@ class App extends Component {
       loggedIn: true
     });
   }
+  
   logOut() {
     this.setState({
       loggedIn: false

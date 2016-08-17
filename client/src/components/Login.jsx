@@ -14,9 +14,9 @@ class Login extends Component {
   helperLogin() {
     const user=$('#UNLogin').val();
     const pass= $('#UNPass').val();
-     $.post("/login", { user: user, pass: pass }, (resp) => {
+    $.post("/login", { user: user, pass: pass }, (resp) => {
       if (resp==="Succ") {
-         this.props.logIn();
+        this.props.logIn();
         this.context.router.push('/');
       }
     });
