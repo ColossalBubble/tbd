@@ -11,14 +11,12 @@ class Login extends Component {
     context.router;
   }
 
-  componentDidMount() {
-  }
-
   helperLogin() {
     const user=$('#UNLogin').val();
     const pass= $('#UNPass').val();
      $.post("/login", { user: user, pass: pass }, (resp) => {
       if (resp==="Succ") {
+         this.props.logIn();
         this.context.router.push('/');
       }
     });
@@ -26,7 +24,7 @@ class Login extends Component {
 
   render() {
     return (
-      <div id = "loginContent">
+      <div id="loginContent">
         Username:<TextField id="UNLogin" /><br />
         Password:<TextField id="UNPass" type="password" /><br />
         <RaisedButton label="Login" onClick={() => { this.helperLogin(); }} / >
@@ -43,7 +41,6 @@ Login.propTypes = {
 Login.contextTypes = {
   router: React.PropTypes.object
 };
-
 
 Login.childContextTypes = {
   muiTheme: React.PropTypes.object.isRequired,

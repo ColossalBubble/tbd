@@ -7,20 +7,9 @@ import { socket } from '../peer';
 
 class Signup extends Component {
 
-constructor(props, context) {
+  constructor(props, context) {
     super(props);
     context.router;
- }
-
-  componentDidMount() {
-    socket.on('UserAlreadyExists', function(msg) {
-      console.log(msg);
-    });
-
-    socket.on('SuccessSignup', msg=> {
-      console.log(msg);
-      this.context.router.push('/');
-    });
   }
 
   helperSignup() {
@@ -28,6 +17,9 @@ constructor(props, context) {
     const pass= $('#UNSPass').val();
    $.post("/signup", { user: user, pass: pass }, (resp) => {
       if (resp==="SuccessSignup") {
+        console.log(this.props.logIn);
+        this.props.logIn();
+        console.log()
         this.context.router.push('/');
       }
     });

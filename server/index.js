@@ -6,9 +6,9 @@ const http = require('http');
 const socketIO = require('socket.io');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-const sessions = require("client-sessions");
 const FacebookStrategy = require('passport-facebook').Strategy;
-
+const expressSession=require('express-session');
+const cookieParser = require('cookie-parser');
 /* Init */
 const app = express();
 const server = http.createServer(app);
@@ -17,13 +17,13 @@ const io = socketIO.listen(server);
 const users = require('./db/connection').users;
 
 /* Middleware */
-
+app.use(cookieParser());
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
 app.use(express.static(pathToStaticDir));
-app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -124,11 +124,10 @@ io.on('connection', socket => {
 
 /* Routes */
 app.get('/logout', function(req, res){
-  console.log('mysession', req.session.passport.user);
+  console.log('mysession',req.session);
   req.logout();
-    console.log('mysession after logout', req.session.passport.user);
-
-  res.redirect('/');
+    console.log('mysession after logout', req.session);
+  res.send('N/A!');
 });
 
 app.post('/login', (req, res) => {
@@ -143,9 +142,11 @@ app.post('/login', (req, res) => {
       }).length > 0) {
       console.log("succ logged in");
       //req.mySession.user = req.body.user;
+      req.session.userName = req.body.user;
       res.send("Succ");
     } else {
       console.log('BadLogin');
+      console.log('req.session',req.session)
       res.send("BadLogin");
     }
   });
@@ -169,6 +170,7 @@ users.findAll({
         }).then(entry => {
           //req.mySession.user = req.body.user;
           console.log(entry.dataValues, ' got entered');
+           req.session.userName = req.body.user;
            res.send('SuccessSignup');
         });
       }
