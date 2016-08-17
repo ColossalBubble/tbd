@@ -75,41 +75,49 @@ passport.deserializeUser((id, done) => {
   });
 });
 
+
 const rooms = {};
+
 io.on('connection', socket => {
-  console.log('user connected');
+
+  console.log('Socket connected with ID: ', socket.id);
+  
   socket.on('create room', roomId => {
     rooms[roomId] = [];
   });
 
   socket.on('join', room => {
+    console.log(socket.id, 'joining', room);
+    // does room exist?
     if (!rooms[room]) {
-      console.log('Not a valid room');
-      // send socket message to user?
       io.to(socket.id).emit('invalid room');
+    // is room full?
+    } else if (rooms[room].length >= 4) {
+      socket.emit('full', room);
     } else {
-      console.log('joining room', room);
-      rooms[room] = rooms[room] || [];
+      socket.join(room);
+      rooms[room].push(socket.id.slice(2));
+      console.log('room is', rooms[room]);
+      // emit message to socket which just joined
+      io.to(socket.id).emit('joined', rooms[room]);
+      // emit message to other sockets in room
+      socket.broadcast.to(room).emit('new peer');
 
-      const numberOfClients = rooms[room].length;
-      if (numberOfClients >= 4) {
-        socket.emit('full', room);
-      } else {
-        socket.join(room);
-        rooms[room] = rooms[room] || [];
-        rooms[room].push(socket.id.slice(2));
-        io.to(room).emit('new.peer', rooms[room]);
-
-        socket.on('disconnect', () => {
-          const socketsInRoom = rooms[room];
-          socketsInRoom.splice(socketsInRoom.indexOf(socket.id.slice(2)), 1);
-          console.log('disconnecting', socketsInRoom, socket.id);
+      socket.on('disconnect', () => {
+        const socketsInRoom = rooms[room];
+        const id = socket.id.slice(2);
+        const index = socketsInRoom.indexOf(id);
+        if (index > -1) {
+          console.log('disconnect', id);
+          socketsInRoom.splice(index, 1);
           socket.leave(room);
           socket.broadcast.to(room).emit('remove connection', id);
         }
       });
     }
   });
+
+
 
   socket.on('exit room', data => {
     const room = rooms[data.room];
@@ -124,13 +132,12 @@ io.on('connection', socket => {
     }
   });
 
-  // TODO: add to room for offer/answer emits
   socket.on('offer', offer => {
-    socket.broadcast.emit('offer', offer);
+    io.to(`/#${offer.to}`).emit('offer', offer);
   });
 
-  socket.on('answer', data => {
-    socket.broadcast.emit('answer', data);
+  socket.on('answer', answer => {
+    io.to(`/#${answer.to}`).emit('answer', answer);
   });
 });
 
