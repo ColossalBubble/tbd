@@ -1,5 +1,6 @@
-var mysql = require('mysql');
+const mysql = require('mysql');
 
+const users = require('./models').users;
 
  var connection= mysql.createConnection({
   host: 'localhost',
@@ -7,6 +8,7 @@ var mysql = require('mysql');
   password: '12345',
   database: 'tbd'
 });
+
 
 connection.connect(function(err){
   if(err){
@@ -18,3 +20,4 @@ connection.connect(function(err){
 
 
 module.exports.connection = connection;
+module.exports.users = users;

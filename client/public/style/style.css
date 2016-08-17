@@ -531,7 +531,19 @@ font-size: 30px;
 
 
 
+#UserMakeInstrumentRoom {
+  position:absolute;
+  top:30%;
+  left:50%;
 
+}
+
+#selectKeys {
+position:absolute;
+  top:30%;
+  left:50%;
+  
+}
 
 
 

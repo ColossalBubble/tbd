@@ -3,7 +3,6 @@ import { Link } from 'react-router';
 // for future material ui use
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-
 import Nav from '../components/Nav';
 
 class App extends Component {

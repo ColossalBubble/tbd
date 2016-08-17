@@ -4,11 +4,13 @@ const path = require('path');
 const logger = require('morgan');
 const http = require('http');
 const socketIO = require('socket.io');
-const db = require('./db/connection.js');
 /* Init */
 const app = express();
 const server = http.createServer(app);
 const io = socketIO.listen(server);
+
+/* DB  */
+const users = require('./db/connection').users;
 
 /* Middleware */
 
@@ -16,12 +18,12 @@ app.use(logger('dev'));
 
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
 app.use(express.static(pathToStaticDir));
-
 /* Sockets */
 
 
 const rooms = {};
 io.on('connection', socket => {
+  console.log('user connected');
   socket.on('create room', roomId => {
     rooms[roomId] = [];
   });
@@ -63,16 +65,50 @@ io.on('connection', socket => {
     socket.broadcast.emit('answer', data);
   });
 
-socket.on('createUser', data => {
-  console.log(data);
-  //
+  socket.on('createUser', data => {
+    users.findAll({
+      where: {
+        userName: data.user
+      }
+    }).then(user => {
+      if (user.map(ind => {
+        return ind.dataValues;
+      }).length > 0) {
+        io.to(socket.id).emit('UserAlreadyExists', 'User Already Exists');
+      } else {
+        io.to(socket.id).emit('SuccessSignup', 'We added you!');
+
+        users.create({
+          userName: data.user,
+          password: data.pass
+        }).then(entry => {
+          console.log(entry.dataValues, ' got entered');
+        });
+      }
+    });
   });
 
+  socket.on('loginUser', data => {
+    users.findAll({
+      where: {
+        userName: data.user,
+        password: data.pass
+      }
+    }).then(user => {
+      if (user.map(ind => {
+        return ind.dataValues;
+      }).length > 0) {
+        io.to(socket.id).emit('SuccessLogin', 'Login Succesful');
+      } else {
+        io.to(socket.id).emit('BadLogin', 'Bad Login!');
+      }
+    });
+  });
 });
 
 /* Routes */
 
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
 });
@@ -84,3 +120,7 @@ const port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log('Listening on port', port);
 });
+
+
+
+

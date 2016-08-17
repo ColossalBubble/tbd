@@ -34,6 +34,8 @@ const keyToNote = {
   p: 'A5'
 };
 
+const test=55;
 const synth = new MonoSynth(config).toMaster();
 
 export default keyPressed => synth.triggerAttackRelease(keyToNote[keyPressed], '8n');
+
