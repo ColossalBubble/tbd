@@ -1,5 +1,4 @@
 const Sequelize = require('sequelize');
-
 const sequelize = new Sequelize('tbd', 'root', '12345');
 
 const users = sequelize.define('user', {
@@ -13,13 +12,12 @@ const users = sequelize.define('user', {
     type: Sequelize.STRING
   },
   token: {
-  type: Sequelize.STRING
+    type: Sequelize.STRING
   }
 }, {
   tableName: 'users',
   timestamps: false,
 });
-
 
 sequelize
   .authenticate()
@@ -31,7 +29,7 @@ sequelize
   });
 
 sequelize
-  .sync( {force:false} )
+  .sync({ force: false })
   .then(err => {
     console.log('It worked!');
   }, err => {
