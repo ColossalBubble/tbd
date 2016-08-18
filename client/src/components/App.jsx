@@ -10,7 +10,7 @@ class App extends Component {
     super(props);
     this.state={
       loggedIn: false,
-      user:"",
+      user: "",
     };
     this.logIn=this.logIn.bind(this);
     this.logOut=this.logOut.bind(this);
@@ -23,14 +23,14 @@ class App extends Component {
   logIn(userName) {
     this.setState({
       loggedIn: true,
-      user:userName,
+      user: userName,
     });
   }
 
   logOut() {
     this.setState({
       loggedIn: false,
-      user:"",
+      user: "",
     });
   }
 

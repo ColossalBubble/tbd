@@ -1,41 +1,33 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import $ from "jquery";
 import RaisedButton from 'material-ui/RaisedButton';
 import { Link } from 'react-router';
 import TextField from 'material-ui/TextField';
-import $ from 'jquery';
+import { showErrorMessage } from '../utils/helperFunctions';
 
 class Signup extends Component {
 
-  constructor(props, context) {
-    super(props);
-    context.router;
-  }
 
   helperSignup() {
     const user=$('#UNSignUp').val();
     const pass= $('#UNSPass').val();
-    $.post("/signup", { user: user, pass: pass }, (resp) => {
-      console.log(resp);
-      if (resp==="SuccessSignup") {
-        this.props.logIn();
-        this.context.router.push('/');
-      } else {
-      console.log("User already exists!");
-        $("#SIMessages")
-          .append('<div id="badSignup"> Username Taken </div>')
-          .hide()
-          .fadeIn(999)
-          .fadeOut(999)
-          .queue(next => {
-            $("#badSignup").remove();
-            next();
-          });
-      }
-    });
+    if (user.length<7) {
+      showErrorMessage("#SIMessages", 'Username must be 7+ characters', "notLongEnough");
+    } else if (pass.length<7) {
+      showErrorMessage("#SIMessages", 'Pass must be 7+ characters', "passNotLongEnough");
+    } else {
+      $.post("/signup", { user: user, pass: pass }, (resp) => {
+        if (resp==="SuccessSignup") {
+          this.props.logIn(user);
+          this.context.router.push('/');
+        } else {
+          showErrorMessage("#SIMessages", 'Username Taken', "badSignUp");
+        }
+      });
+    }
   }
 
   render() {
-    console.log(this.props.user);
     return (
       <div id="signupContent">
 
@@ -43,7 +35,7 @@ class Signup extends Component {
         Password:<TextField id="UNSPass" type="password" /><br />
         <RaisedButton label="Signup" onClick={() => { this.helperSignup(); }} />
         <Link to="login" ><RaisedButton label="Click to Login Instead" /> </Link >
-        <div id="SIMessages"><br/> </div>
+        <div id="SIMessages"><br /> </div>
       </div>
     );
   }

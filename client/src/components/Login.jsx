@@ -3,13 +3,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import { Link } from 'react-router';
 import $ from 'jquery';
+import { showErrorMessage } from '../utils/helperFunctions';
 
 class Login extends Component {
-
-  constructor(props, context) {
-    super(props);
-    context.router;
-  }
 
   helperLogin() {
     const user=$('#UNLogin').val();
@@ -19,28 +15,19 @@ class Login extends Component {
         this.props.logIn(user);
         this.context.router.push('/');
       } else {
-        $("#LIMessages")
-        .append('<div id="badLogin"> Bad login </div>')
-        .hide()
-        .fadeIn(999)
-        .fadeOut(999)
-        .queue(next => {
-          $("#badLogin").remove();
-          next();
-        });
+        showErrorMessage("#LIMessages", 'Bad login', "badLogin");
       }
     });
   }
 
   render() {
-    console.log(this.props.user);
     return (
       <div id="loginContent">
         Username:<TextField id="UNLogin" /><br />
         Password:<TextField id="UNPass" type="password" /><br />
         <RaisedButton label="Login" onClick={() => { this.helperLogin(); }} / >
         <Link to="signup"><RaisedButton label="Click to signup" /></Link>
-        <div id="LIMessages"><br/> </div>
+        <div id="LIMessages"><br /> </div>
       </div>
     );
   }
