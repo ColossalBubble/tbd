@@ -83,6 +83,12 @@ class Room extends React.Component {
             <JamRoom instrument={this.state.instrument} peers={this.state.peerConnections} /> :
             <div className="selectInstrument">
               <SelectInstrument handleClick={this.selectInstrument} />
+              <RaisedButton
+                style={{ bottom: 0, position: "absolute" }}
+                label="Start"
+                onClick={this.handleStart}
+                disabled={!this.state.connected || !this.state.instrument}
+              />
             </div>
         }
       </div>

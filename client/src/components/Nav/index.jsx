@@ -12,7 +12,7 @@ const AppNavBar = () => (
       showMenuIconButton={false}
     >
       <Link to="/">
-        TBD
+        <img id="logo" src="http://bit.ly/2beSCQg" />
       </Link>
       <Link to="login" ><button className="navButtons"> Login!</button>
       </Link>
