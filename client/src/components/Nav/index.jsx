@@ -14,6 +14,15 @@ class AppNavBar extends Component {
     this.logOut=this.clearSessions.bind(this);
   }
 
+  componentDidMount() {
+      $.get("/fbLoggedIn?", (response, err) => {
+        console.log(response);
+        if (response==="true") {
+          this.logIn();
+        }
+      });
+  }
+
   clearSessions() {
     $.get("/logout", (a, b) => {
       this.props.logOut();

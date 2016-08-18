@@ -18,7 +18,7 @@ class Login extends Component {
       if (resp==="Succ") {
         this.props.logIn();
         this.context.router.push('/');
-      } else  {
+      } else {
         $("#LIMessages")
         .append('<div id="badLogin"> Bad login </div>')
         .hide()

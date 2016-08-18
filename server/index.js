@@ -41,6 +41,7 @@ passport.use(new FacebookStrategy({
       return ind.dataValues;
     }).length > 0) {
       console.log('user already exists', user[0]);
+      //console.log('this is req.sesion', req.session);
       return done(null, user);
     } else {
       users.create({
@@ -49,6 +50,7 @@ passport.use(new FacebookStrategy({
         facebookId: profile.id,
         token: accessToken,
       }).then(entry => {
+        //console.log('this is req.sesion', req.session);
         console.log('this is entry for a newly added user', entry.dataValues.id);
         console.log(entry.dataValues, ' got entered', entry);
         return done(null, entry.dataValues.id);
@@ -117,8 +119,6 @@ io.on('connection', socket => {
     }
   });
 
-
-
   socket.on('exit room', data => {
     const room = rooms[data.room];
     if (room !== undefined) {
@@ -144,6 +144,9 @@ io.on('connection', socket => {
 /* Routes */
 app.get('/logout', (req, res) => {
   console.log('mysession', req.session);
+  if (req.session.userName){
+    delete req.session.userName;
+  }
   req.logout();
   console.log('mysession after logout', req.session);
   res.send('N/A!');
@@ -180,6 +183,7 @@ app.post('/signup', (req, res) => {
     if (user.map(ind => {
       return ind.dataValues;
     }).length > 0) {
+      console.log('this is req.sesion', req.session);
       res.send('UserAlreadyExists');
     } else {
       users.create({
@@ -198,10 +202,18 @@ app.post('/signup', (req, res) => {
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successRedirect: '/login',
-                                      failureRedirect: '/login' }));
+  passport.authenticate('facebook', { successReturnToOrRedirect: '/', failureRedirect: '/login' }
+      ));
+
+app.get("/fbLoggedIn?", (req, res) => {
+
+  console.log(req.session.passport);
+  res.send(req.session.passport?"true":"false")
+});
+
 
 app.get('*', (req, res) => {
+  console.log('req.session',req.session);
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
 });
