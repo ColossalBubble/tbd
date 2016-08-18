@@ -75,7 +75,14 @@ class Room extends React.Component {
     });
   }
 
+
   render() {
+    const buttonStyles = {
+      position: 'absolute',
+      left: '45%',
+      top: '50%'
+    };
+
     return (
       <div className="room">
         {
@@ -84,7 +91,7 @@ class Room extends React.Component {
             <div className="selectInstrument">
               <SelectInstrument handleClick={this.selectInstrument} />
               <RaisedButton
-                style={{ bottom: 0, position: "absolute" }}
+                style={buttonStyles}
                 label="Start"
                 onClick={this.handleStart}
                 disabled={!this.state.connected || !this.state.instrument}
@@ -105,4 +112,3 @@ Room.contextTypes = {
 };
 
 export default Room;
-
