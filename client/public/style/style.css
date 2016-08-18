@@ -242,12 +242,6 @@
   background-size: cover;
 }
 
-#instLogo {
-  position: absolute;
-  top:10%;
-  left:35%;
-}
-
 
 #pianoChoose {
   position: absolute;
@@ -453,7 +447,7 @@
 }
 
 #navBar {
-  position:absolute;
+  position: block !important;
   width:100%;
 }
 
@@ -528,4 +522,20 @@ font-size: 30px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.carousel {
+  text-align: center;
+  margin-top: 5%;
+}
+
+button.slick-arrow.slick-prev {
+  position: absolute;
+  top: 42%;
+}
+
+button.slick-arrow.slick-next {
+  position: absolute;
+  top: 42%;
+  right:8px
 }
