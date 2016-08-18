@@ -6,30 +6,33 @@ import $ from "jquery";
 const color={ backgroundImage: 'url("http://bit.ly/2b2ePzs")', width: "100%", opacity: 0.6 };
 
 class AppNavBar extends Component {
-
   constructor(props, context) {
     super(props);
     context.router;
     this.logIn=this.props.logIn.bind(this);
     this.logOut=this.clearSessions.bind(this);
+    console.log("this.props.user",this.props.user);
   }
 
   componentDidMount() {
       $.get("/fbLoggedIn?", (response, err) => {
         console.log(response);
         if (response==="true") {
-          this.logIn();
+          this.logIn("FACEBOOK USER")
         }
       });
   }
 
   clearSessions() {
+    console.log('youre trying to log out ')
     $.get("/logout", (a, b) => {
+      console.log("this is a and b",a,b);
       this.props.logOut();
     });
   }
 
   render() {
+   
     return (
       <div id="navBar">
         <AppBar
@@ -40,10 +43,10 @@ class AppNavBar extends Component {
           <Link to="/">
             <img id="logo" src="http://bit.ly/2beSCQg" />
           </Link>
-          {this.props.loggedIn?null:<a href="/auth/facebook"><button onClick={this.logIn} className="navButtons"> Login with FB!</button></a>}
+          {this.props.loggedIn?null:<a href="/auth/facebook"><button onClick={() => {this.logIn("FACEBOOK USER")}} className="navButtons"> Login with FB!</button></a>}
           {this.props.loggedIn?null:<Link to="login" ><button className="navButtons"> Login!</button></Link>}
           <Link to="MakeInstrument"><button className="navButtons"> Make your own instrument!</button></Link>
-          {!this.props.loggedIn?null:<Link to="/"><button onClick={this.logOut} className="navButtons"> SignOut!</button></Link>}
+          {!this.props.loggedIn?null:<Link to="/"><button onClick={() => {this.logOut()}} className="navButtons"> SignOut!</button></Link>}
           {this.props.loggedIn?null:<Link to="signup"><button className="navButtons"> Signup!</button></Link>}
         </AppBar >
       </div>

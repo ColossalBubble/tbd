@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Nav from '../components/Nav';
-
+//
 class App extends Component {
   constructor(props) {
     super(props);
@@ -28,6 +28,7 @@ class App extends Component {
   }
 
   logOut() {
+    console.log('Main logout being called');
     this.setState({
       loggedIn: false,
       user: "",

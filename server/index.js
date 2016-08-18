@@ -9,6 +9,7 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const expressSession=require('express-session');
 const cookieParser = require('cookie-parser');
+require("dotenv").config()
 /* Init */
 const app = express();
 const server = http.createServer(app);
@@ -28,8 +29,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new FacebookStrategy({
-  clientID: '1014211832028342',
-  clientSecret: 'ac6ae8a72885b86270805337f66e83e6',
+  clientID: process.env.client_Id,
+  clientSecret: process.env.client_Secret,
   callbackURL: "http://localhost:3000/auth/facebook/callback"
 },
 
