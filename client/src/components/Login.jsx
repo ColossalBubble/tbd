@@ -18,6 +18,16 @@ class Login extends Component {
       if (resp==="Succ") {
         this.props.logIn();
         this.context.router.push('/');
+      } else  {
+        $("#LIMessages")
+        .append('<div id="badLogin"> Bad login </div>')
+        .hide()
+        .fadeIn(999)
+        .fadeOut(999)
+        .queue(next => {
+          $("#badLogin").remove();
+          next();
+        });
       }
     });
   }
@@ -29,6 +39,7 @@ class Login extends Component {
         Password:<TextField id="UNPass" type="password" /><br />
         <RaisedButton label="Login" onClick={() => { this.helperLogin(); }} / >
         <Link to="signup"><RaisedButton label="Click to signup" /></Link>
+        <div id="LIMessages"><br/> </div>
       </div>
     );
   }

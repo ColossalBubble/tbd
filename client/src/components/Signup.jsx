@@ -19,6 +19,17 @@ class Signup extends Component {
       if (resp==="SuccessSignup") {
         this.props.logIn();
         this.context.router.push('/');
+      } else {
+      console.log("User already exists!");
+        $("#SIMessages")
+          .append('<div id="badSignup"> Username Taken </div>')
+          .hide()
+          .fadeIn(999)
+          .fadeOut(999)
+          .queue(next => {
+            $("#badSignup").remove();
+            next();
+          });
       }
     });
   }
@@ -31,6 +42,7 @@ class Signup extends Component {
         Password:<TextField id="UNSPass" type="password" /><br />
         <RaisedButton label="Signup" onClick={() => { this.helperSignup(); }} />
         <Link to="login" ><RaisedButton label="Click to Login Instead" /> </Link >
+        <div id="SIMessages"><br/> </div>
       </div>
     );
   }
