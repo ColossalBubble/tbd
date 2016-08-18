@@ -1,7 +1,5 @@
 // Modules
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import classnames from 'classnames';
 
 // Components
 import SelectInstrument from '../components/SelectInstrument';
@@ -137,22 +135,20 @@ class Room extends React.Component {
     });
   }
 
+
   render() {
-    const opacity = instrument => classnames({ selected: this.state.instrument === instrument }, 'instrument');
+    const disableStartButton = !this.state.connected || !this.state.instrument;
+
     return (
-      <div>
+      <div className="room">
         {
           this.state.startJam ?
             <JamRoom instrument={this.state.instrument} peers={this.state.peers} /> :
-            <div>
-              <SelectInstrument handleClick={this.selectInstrument} opacity={opacity} />
-              <RaisedButton
-                style={{ bottom: 0, position: "absolute" }}
-                label="Start"
-                onClick={this.handleStart}
-                disabled={!this.state.connected || !this.state.instrument}
-              />
-            </div>
+            <SelectInstrument
+              handleClick={this.selectInstrument}
+              handleStart={this.handleStart}
+              disabled={disableStartButton}
+            />
         }
       </div>
     );
@@ -168,4 +164,3 @@ Room.contextTypes = {
 };
 
 export default Room;
-

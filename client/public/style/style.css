@@ -9,7 +9,6 @@
 
 
 .child {
-  /*margin: 0 auto;*/
 }
 
 
@@ -172,9 +171,9 @@
   position: relative;
   background-color: #2FD2DE;
   width: 200px;
-  height: 100px; 
-  border-top-left-radius: 110px; 
-  border-top-right-radius: 110px; 
+  height: 100px;
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
   border: 2px;
   border-color:#0066ff;
   bottom: 0;
@@ -193,9 +192,9 @@
   position: relative;
   background-color: #2FD2DE;
   width: 200px;
-  height: 100px; 
-  border-top-left-radius: 110px;  
-  border-top-right-radius: 110px; 
+  height: 100px;
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
   border: 2px;
   border-color:#0066ff;
   bottom: 0;
@@ -208,9 +207,9 @@
   position: relative;
   background-color: #2FD2DE;
   width: 200px;
-  height: 100px; 
-  border-top-left-radius: 110px; 
-  border-top-right-radius: 110px; 
+  height: 100px;
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
   border: 2px;
   border-color:#0066ff;
   bottom: 0;
@@ -223,9 +222,9 @@
   position: relative;
   background-color: #2FD2DE;
   width: 200px;
-  height: 100px; 
-  border-top-left-radius: 110px;  
-  border-top-right-radius: 110px; 
+  height: 100px;
+  border-top-left-radius: 110px;
+  border-top-right-radius: 110px;
   border: 2px;
   border-color:#0066ff;
   bottom: 0;
@@ -234,7 +233,6 @@
   animation: bounce 1s;
 }
 
-
 #selectInstrumentRoom {
   background-image: url("http://bit.ly/1zPhvmk");
   position: absolute;
@@ -242,12 +240,6 @@
   height: 100%;
   background-size: 100%;
   background-size: cover;
-}
-
-#instLogo {
-  position: absolute;
-  top:10%;
-  left:35%;
 }
 
 
@@ -455,9 +447,8 @@
 }
 
 #navBar {
-  position:absolute;
+  position: block !important;
   width:100%;
-  height:100%;
 }
 
 .navButtons {
@@ -484,7 +475,7 @@
   height:100%;
   width:64px;
   left:0%;
-  -webkit-transition: height 1s, width 1s, left 1s,top 1s; 
+  -webkit-transition: height 1s, width 1s, left 1s,top 1s;
 }
 
 #logo:hover {
@@ -533,4 +524,18 @@ font-size: 30px;
   transform: translate(-50%, -50%);
 }
 
+.carousel {
+  text-align: center;
+  margin-top: 5%;
+}
 
+button.slick-arrow.slick-prev {
+  position: absolute;
+  top: 42%;
+}
+
+button.slick-arrow.slick-next {
+  position: absolute;
+  top: 42%;
+  right:8px
+}
