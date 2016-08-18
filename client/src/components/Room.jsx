@@ -1,6 +1,5 @@
 // Modules
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
 
 // Components
 import SelectInstrument from '../components/SelectInstrument';
@@ -138,26 +137,18 @@ class Room extends React.Component {
 
 
   render() {
-    const buttonStyles = {
-      position: 'absolute',
-      left: '45%',
-      top: '50%'
-    };
+    const disableStartButton = !this.state.connected || !this.state.instrument;
 
     return (
       <div className="room">
         {
           this.state.startJam ?
             <JamRoom instrument={this.state.instrument} peers={this.state.peers} /> :
-            <div className="selectInstrument">
-              <SelectInstrument handleClick={this.selectInstrument} />
-              <RaisedButton
-                style={buttonStyles}
-                label="Start"
-                onClick={this.handleStart}
-                disabled={!this.state.connected || !this.state.instrument}
-              />
-            </div>
+            <SelectInstrument
+              handleClick={this.selectInstrument}
+              handleStart={this.handleStart}
+              disabled={disableStartButton}
+            />
         }
       </div>
     );

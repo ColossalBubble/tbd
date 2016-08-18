@@ -1,48 +1,19 @@
 import React from 'react';
 import Carousel from 'react-slick';
+import StartButton from './StartButton';
+import { SelectPiano, SelectDrums, SelectFry } from './Selections';
 
 const Logo = () => (
-  <div>
+  <div id="instLogo">
     <img
-      id="instLogo"
       src="../../../style/InstrumentRoomLogo.png"
       alt="logo"
     />
   </div>
 );
 
-const SelectPiano = ({ handleClick }) => (
-  <div id="pianoChoose">
-    <img
-      src="http://handlinpiano2.codyhandlin.com/wp-content/uploads/2016/06/grandepiano_2.png"
-      alt="piano"
-      onClick={handleClick.bind(null, 'piano')}
-    />
-  </div>
-);
-
-const SelectDrums = ({ handleClick }) => (
-  <div id="drumsChoose">
-    <img
-      src="http://www.vancouvertop40radio.com/Images/Clip%20Art/drumset.gif"
-      alt="drums"
-      onClick={handleClick.bind(null, 'drums')}
-    />
-  </div>
-);
-
-const SelectFry = ({ handleClick }) => (
-  <div id="fryChoose">
-    <img
-      src="http://i.stack.imgur.com/STEuc.png"
-      alt="fry"
-      onClick={handleClick.bind(null, 'fry')}
-    />
-  </div>
- );
-
 // Note: images need to be the same height
-const SelectInstrument = ({ handleClick }) => {
+const SelectInstrument = ({ handleClick, handleStart, disabled }) => {
   const multipleSettings = {
     infinite: true,
     speed: 500,
@@ -62,7 +33,6 @@ const SelectInstrument = ({ handleClick }) => {
   const imgStyles = {
     width: '640px',
     height: 'auto',
-    outline: '1px dashed black',
   };
 
   const clickPiano = handleClick.bind(null, 'piano');
@@ -70,8 +40,8 @@ const SelectInstrument = ({ handleClick }) => {
   const clickFry = handleClick.bind(null, 'fry');
 
   return (
-    <section className="carousel">
-      <div><Logo /></div>
+    <section className="carousel selectInstrument">
+      <Logo />
       <Carousel {...multipleSettings}>
         <img
           style={imgStyles}
@@ -89,6 +59,7 @@ const SelectInstrument = ({ handleClick }) => {
           onClick={clickFry}
         />
       </Carousel>
+      <StartButton disabled={disabled} handleStart={handleStart} />
     </section>
   );
 };
