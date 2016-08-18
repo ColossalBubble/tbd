@@ -65,13 +65,29 @@ const SelectInstrument = ({ handleClick }) => {
     outline: '1px dashed black',
   };
 
+  const clickPiano = handleClick.bind(null, 'piano');
+  const clickDrums = handleClick.bind(null, 'drums');
+  const clickFry = handleClick.bind(null, 'fry');
+
   return (
     <section className="carousel">
       <div><Logo /></div>
       <Carousel {...multipleSettings}>
-        <img style={imgStyles} src="http://placehold.it/640x360/ffffff/c0392b/&text=Piano"/>
-        <img style={imgStyles} src="http://placehold.it/640x360/ffffff/c0392b/&text=Drums"/>
-        <img style={imgStyles} src="http://placehold.it/640x360/ffffff/c0392b/&text=Fry"/>
+        <img
+          style={imgStyles}
+          src="http://placehold.it/640x360/ffffff/c0392b/&text=Piano"
+          onClick={clickPiano}
+        />
+        <img
+          style={imgStyles}
+          src="http://placehold.it/640x360/ffffff/c0392b/&text=Drums"
+          onClick={clickDrums}
+        />
+        <img
+          style={imgStyles}
+          src="http://placehold.it/640x360/ffffff/c0392b/&text=Fry"
+          onClick={clickFry}
+        />
       </Carousel>
     </section>
   );
