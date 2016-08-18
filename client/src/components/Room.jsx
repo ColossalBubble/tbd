@@ -150,13 +150,14 @@ class Room extends React.Component {
           this.state.startJam ?
             <JamRoom instrument={this.state.instrument} peers={this.state.peers} /> :
             <div className="selectInstrument">
-            <SelectInstrument handleClick={this.selectInstrument} />
-            <RaisedButton
-              style={buttonStyles}
-              label="Start"
-              onClick={this.handleStart}
-              disabled={!this.state.connected || !this.state.instrument}
-            />
+              <SelectInstrument handleClick={this.selectInstrument} />
+              <RaisedButton
+                style={buttonStyles}
+                label="Start"
+                onClick={this.handleStart}
+                disabled={!this.state.connected || !this.state.instrument}
+              />
+            </div>
         }
       </div>
     );
