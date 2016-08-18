@@ -9,7 +9,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state={
-      loggedIn: false
+      loggedIn: false,
+      user:"",
     };
     this.logIn=this.logIn.bind(this);
     this.logOut=this.logOut.bind(this);
@@ -19,15 +20,17 @@ class App extends Component {
     return { muiTheme: getMuiTheme(baseTheme) };
   }
 
-  logIn() {
+  logIn(userName) {
     this.setState({
-      loggedIn: true
+      loggedIn: true,
+      user:userName,
     });
   }
-  
+
   logOut() {
     this.setState({
-      loggedIn: false
+      loggedIn: false,
+      user:"",
     });
   }
 
@@ -37,11 +40,12 @@ class App extends Component {
         loggedIn: this.state.loggedIn,
         logIn: this.logIn,
         logOut: this.logOut,
+        user: this.state.user,
       });
     });
     return (
       <div>
-        <Nav logIn={this.logIn} logOut={this.logOut} loggedIn={this.state.loggedIn} title={'tbd'} />
+        <Nav user= {this.state.user} logIn={this.logIn} logOut={this.logOut} loggedIn={this.state.loggedIn} title={'tbd'} />
         {
           this.props.children ?
             <section className="child">

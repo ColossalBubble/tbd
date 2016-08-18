@@ -541,5 +541,13 @@ font-size: 30px;
   position:absolute;
   top:30%;
   left:50%;
-
 }
+
+#Welcome {
+  position:absolute;
+  color:white;
+  left:20%;
+  top: 35%;
+  font-size: 20px;
+}
+

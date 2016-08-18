@@ -16,7 +16,7 @@ class Login extends Component {
     const pass= $('#UNPass').val();
     $.post("/login", { user: user, pass: pass }, (resp) => {
       if (resp==="Succ") {
-        this.props.logIn();
+        this.props.logIn(user);
         this.context.router.push('/');
       } else {
         $("#LIMessages")
@@ -33,6 +33,7 @@ class Login extends Component {
   }
 
   render() {
+    console.log(this.props.user);
     return (
       <div id="loginContent">
         Username:<TextField id="UNLogin" /><br />

@@ -36,6 +36,7 @@ class AppNavBar extends Component {
           style={color}
           showMenuIconButton={false}
         >
+         {this.props.user.length?<div id="Welcome"> Hello {this.props.user}!</div>:null}
           <Link to="/">
             <img id="logo" src="http://bit.ly/2beSCQg" />
           </Link>
