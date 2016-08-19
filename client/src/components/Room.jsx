@@ -158,7 +158,6 @@ class Room extends React.Component {
     return (
       <div>
         <Help
-          style={{ float: 'right' }}
           handleOpen={this.handleHelp}
           showPopover={this.state.showPopover}
           anchorEl={this.state.anchorEl}
