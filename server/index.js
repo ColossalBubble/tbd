@@ -239,6 +239,10 @@ app.post('/signup', (req, res) => {
   });
 });
 
+app.get('/MakeInstrument', (req, res) => {
+  console.log("youre trying to access make Instrument!!!")
+  res.redirect("/login");
+});
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
