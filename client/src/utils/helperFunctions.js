@@ -4,7 +4,7 @@ import $ from 'jquery';
 
 function showErrorMessage(appendTo, message, id) {
   $(appendTo)
-    .append(`<div id=+""+${id}+""+ > ${message} </div>`)
+    .append('<div id='+ '"'+id+ '"' + '>'+ message+' </div>')
     .hide()
     .fadeIn(999)
     .fadeOut(999)

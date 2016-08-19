@@ -35,31 +35,31 @@ const instruments = sequelize.define('instruments', {
   instrumentName: {
     type: Sequelize.STRING
   },
-  a: {
+  A: {
     type: Sequelize.STRING
   },
-  s: {
+  S: {
     type: Sequelize.STRING
   },
-  d: {
+  D: {
     type: Sequelize.STRING
   },
-  f: {
+  F: {
     type: Sequelize.STRING
   },
-  g: {
+  G: {
     type: Sequelize.STRING
   },
-  h: {
+  H: {
     type: Sequelize.STRING
   },
-  j: {
+  J: {
     type: Sequelize.STRING
   },
-  k: {
+  K: {
     type: Sequelize.STRING
   },
-  l: {
+  L: {
     type: Sequelize.STRING
   }
 

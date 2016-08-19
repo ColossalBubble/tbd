@@ -73,7 +73,7 @@ activateFry() {
   makeInstrument() {
     var name= $("#userInstName").val()
     console.log(name, "THE NAME!!!")
-    var inMemObject = {name:name};
+    var inMemObject = {userName:this.props.user, name:name};
     var repeat = false;
     const keys = $(".selectKey option:selected").text();
 
@@ -93,6 +93,7 @@ activateFry() {
 
 
   render() {
+    console.log(this.props.user,'user in the house!!!!!');
     return (
     
       <div id="UserMakeInstrumentRoom">

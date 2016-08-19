@@ -158,21 +158,27 @@ io.on('connection', socket => {
   });
 
 socket.on('newInstCreated', instrument => {
-  console.log('this is a brand new instrument', instrument);
-
-    instruments.findAll({
-    where: {
-      instrumentName:instrument.name
-    }
-  }).then(instrument => {
-     if (instrument.length)
-      return ind.dataValues;
-    }).length > 0
-    console.log('instruments of the same name',instrument);
+  console.log('this is a brand new instrument', instrument,instrument.A);
 
 
-  })
+    instruments.create({
+      userName:instrument.userName,
+      instrumentName:instrument.name,
+      A:instrument.A,
+      S:instrument.S,
+      D:instrument.D,
+      F:instrument.F,
+      G:instrument.G,
+      H:instrument.H,
+      J:instrument.J,
+      K:instrument.K,
+      L:instrument.L
+    }).then(instrumentEntry => {
+     console.log(instrumentEntry.dataValues, ' got entered');
 
+  });
+
+});
 
 });
 
