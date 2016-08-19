@@ -4,7 +4,7 @@ import Popover from 'material-ui/Popover';
 import IconButton from 'material-ui/IconButton';
 
 const Help = ({ handleOpen, showPopover, anchorEl, handleClose }) => (
-  <div>
+  <div className="helpButton">
     <IconButton
       iconClassName="material-icons"
       iconStyle={{ height: 48, width: 48 }}
@@ -16,11 +16,12 @@ const Help = ({ handleOpen, showPopover, anchorEl, handleClose }) => (
     <Popover
       open={showPopover}
       anchorEl={anchorEl}
-      anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
-      targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+      anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      targetOrigin={{ horizontal: 'left', vertical: 'top' }}
       onRequestClose={handleClose}
+      canAutoPosition={false}
     >
-      <p style={{ height: 450, width: 350, margin: 20, textAlign: 'center', display: 'inline-block' }}>
+      <p style={{ height: 350, width: 250, margin: 20, textAlign: 'center', display: 'inline-block' }}>
         Select an instrument to play and press start when you are ready.
         Use your keyboard to play your instrument.
         Invite your friends to jam with you by clicking on the &#xFF0B; symbol and sharing the link.

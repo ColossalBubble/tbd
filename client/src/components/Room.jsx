@@ -143,9 +143,10 @@ class Room extends React.Component {
   }
 
   handleHelp(event) {
+    event.preventDefault();
     this.setState({
       showPopover: true,
-      anchorEl: event.currentTarget
+      anchorEl: event.target
     });
   }
 
