@@ -4,24 +4,85 @@ const path = require('path');
 const logger = require('morgan');
 const http = require('http');
 const socketIO = require('socket.io');
-
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const expressSession=require('express-session');
+const cookieParser = require('cookie-parser');
+require("dotenv").config()
 /* Init */
 const app = express();
 const server = http.createServer(app);
 const io = socketIO.listen(server);
-
+/* DB  */
+const users = require('./db/connection').users;
+const instruments = require('./db/connection').instruments;
 /* Middleware */
-
+app.use(cookieParser());
 app.use(logger('dev'));
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
 app.use(express.static(pathToStaticDir));
+app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
-/* Sockets */
+passport.use(new FacebookStrategy({
+  clientID: process.env.client_Id,
+  clientSecret: process.env.client_Secret,
+  callbackURL: "http://localhost:3000/auth/facebook/callback"
+},
+
+  (accessToken, refreshToken, profile, done) => {
+    console.log('this is the profile', profile.id);
+    users.findAll({ where: { facebookId: profile.id }
+  }).then(user => {
+    if (user.map(ind => {
+      return ind.dataValues;
+    }).length > 0) {
+      console.log('user already exists', user[0]);
+      //console.log('this is req.sesion', req.session);
+      return done(null, user);
+    } else {
+      users.create({
+        userName: ` ${profile.name.givenName} ${profile.name.familyName}`,
+        password: "N/A",
+        facebookId: profile.id,
+        token: accessToken,
+      }).then(entry => {
+        //console.log('this is req.sesion', req.session);
+        console.log('this is entry for a newly added user', entry.dataValues.id);
+        console.log(entry.dataValues, ' got entered', entry);
+        return done(null, entry.dataValues.id);
+      });
+    }
+  });
+  }
+));
+
+
+// serialize and deserialize
+passport.serializeUser((user, done) => {
+  const final = typeof user==="number"?user:user[0].dataValues.id;
+  console.log('this is the user param', user);
+  console.log('serializing!!!', final);
+  done(null, final);
+});
+
+passport.deserializeUser((id, done) => {
+  console.log('this is id in deserialize', id);
+  users.findAll({ where: { id: id } }).then(found => {
+    console.log('im trying to des this user', found[0].dataValues);
+    done(null, id);
+  });
+});
+
 
 const rooms = {};
 
 io.on('connection', socket => {
+
   console.log('Socket connected with ID: ', socket.id);
 
   socket.on('create room', roomId => {
@@ -91,14 +152,103 @@ io.on('connection', socket => {
   socket.on('give peer info', info => {
     io.to(`/#${info.sendTo}`).emit('peer info', info);
   });
+
+socket.on('newInstCreated', instrument => {
+  console.log('this is a brand new instrument', instrument);
+
+    instruments.findAll({
+    where: {
+      instrumentName:instrument.name
+    }
+  }).then(instrument => {
+     if (instrument.length)
+      return ind.dataValues;
+    }).length > 0
+    console.log('instruments of the same name',instrument);
+
+
+  })
+
+
 });
 
 /* Routes */
+app.get('/logout', (req, res) => {
+  console.log('mysession', req.session);
+  if (req.session.userName){
+    delete req.session.userName;
+  }
+  req.logout();
+  console.log('mysession after logout', req.session);
+  res.send('N/A!');
+});
+
+app.post('/login', (req, res) => {
+  users.findAll({
+    where: {
+      userName: req.body.user,
+      password: req.body.pass
+    }
+  }).then(user => {
+    if (user.map(ind => {
+      return ind.dataValues;
+    }).length > 0) {
+      console.log("succ logged in");
+      req.session.userName = req.body.user;
+      res.send("Succ");
+    } else {
+      console.log('BadLogin');
+      console.log('req.session', req.session);
+      res.send("BadLogin");
+    }
+  });
+});
+
+
+app.post('/signup', (req, res) => {
+  users.findAll({
+    where: {
+      userName: req.body.user
+    }
+  }).then(user => {
+    if (user.map(ind => {
+      return ind.dataValues;
+    }).length > 0) {
+      console.log('this is req.sesion', req.session);
+      res.send('UserAlreadyExists');
+    } else {
+      users.create({
+        userName: req.body.user,
+        password: req.body.pass
+      }).then(entry => {
+        console.log(entry.dataValues, ' got entered');
+        req.session.userName = req.body.user;
+        res.send('SuccessSignup');
+      });
+    }
+  });
+});
+
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { successReturnToOrRedirect: '/', failureRedirect: '/login' }
+      ));
+
+app.get("/fbLoggedIn?", (req, res) => {
+
+  console.log(req.session.passport);
+  res.send(req.session.passport?"true":"false")
+});
+
 
 app.get('*', (req, res) => {
+  console.log('req.session',req.session);
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
 });
+
 
 /* Initialize */
 

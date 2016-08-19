@@ -520,17 +520,34 @@ font-size: 30px;
   font-size: 15px;
   font-weight: bold;
   size:20px;
-
 }
 
-#link-window {
-  background-color: blue;
-  position: absolute;
-  width: 50%;
-  height: 50%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+#signupContent { 
+  position:absolute;
+  top:30%;
 }
 
+#loginContent {
+  position:absolute;
+  top:30%;
+}
 
+#UserMakeInstrumentRoom {
+  position:absolute;
+  top:30%;
+  left:50%;
+}
+
+#selectKeys {
+  position:absolute;
+  top:30%;
+  left:50%;
+}
+
+#Welcome {
+  position:absolute;
+  color:white;
+  left:20%;
+  top: 35%;
+  font-size: 20px;
+}
