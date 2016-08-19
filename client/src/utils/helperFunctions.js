@@ -18,9 +18,11 @@ function showErrorMessage(appendTo, message, id) {
 
 function addKeyHelper(id){
 
-    $("#UserMakeInstrumentRoom").append(`
+  
+
+    $("#UserMakeInstrumentRoom").prepend(`
         <div class="selectKey" id="selectKeys_${id}"> 
-          Select a Key:<form>
+          Select a Key to map to:<form>
             <select name="cars">
               <option value="A">A</option>
               <option value="S">S</option>
@@ -34,14 +36,6 @@ function addKeyHelper(id){
 
             </select>
           </form>
-
-        <form>
-        Select Some parameters SoundParam1: <input type="text"  /><br>
-        SoundParam2: <input type="text"  /><br>
-        SoundParam3: <input type="text"  /><br>
-        SoundParam4: <input type="text"  />
-        </form>
-        <button id ="sampleSound_${id}" class='sampleSound'>Sample sound !</button>
       </div>`);
 }
 

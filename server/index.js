@@ -9,6 +9,7 @@ const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const expressSession=require('express-session');
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
 require("dotenv").config()
 /* Init */
 const app = express();
@@ -23,7 +24,7 @@ app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
-app.use(express.static(pathToStaticDir));
+app.use(express.static(pathToStaticDir, { redirect : false }));
 app.use(expressSession({
   secret: process.env.sessions_secret,
   resave: true,
@@ -42,9 +43,7 @@ passport.use(new FacebookStrategy({
     console.log('this is the profile', profile.id);
     users.findAll({ where: { facebookId: profile.id }
   }).then(user => {
-    if (user.map(ind => {
-      return ind.dataValues;
-    }).length > 0) {
+    if (user.length > 0) {
       console.log('user already exists', user[0]);
       //console.log('this is req.sesion', req.session);
       return done(null, user);
@@ -164,15 +163,15 @@ socket.on('newInstCreated', instrument => {
     instruments.create({
       userName:instrument.userName,
       instrumentName:instrument.name,
-      A:instrument.A,
-      S:instrument.S,
-      D:instrument.D,
-      F:instrument.F,
-      G:instrument.G,
-      H:instrument.H,
-      J:instrument.J,
-      K:instrument.K,
-      L:instrument.L
+      A:JSON.stringify(instrument.A),
+      S:JSON.stringify(instrument.S),
+      D:JSON.stringify(instrument.D),
+      F:JSON.stringify(instrument.F),
+      G:JSON.stringify(instrument.G),
+      H:JSON.stringify(instrument.H),
+      J:JSON.stringify(instrument.J),
+      K:JSON.stringify(instrument.K),
+      L:JSON.stringify(instrument.L)
     }).then(instrumentEntry => {
      console.log(instrumentEntry.dataValues, ' got entered');
 
@@ -194,15 +193,24 @@ app.get('/logout', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+console.log('req.body.pass',req.body.pass);
+
   users.findAll({
     where: {
       userName: req.body.user,
-      password: req.body.pass
+    }
+  }).then(person => {
+    console.log(person[0].dataValues.salt,'person salt');
+ const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt)
+ console.log('this is the hash',hash)
+
+users.findAll({
+    where: {
+      userName: req.body.user,
+      password:hash
     }
   }).then(user => {
-    if (user.map(ind => {
-      return ind.dataValues;
-    }).length > 0) {
+    if (user.length > 0) {
       console.log("succ logged in");
       req.session.userName = req.body.user;
       res.send("Succ");
@@ -211,7 +219,8 @@ app.post('/login', (req, res) => {
       console.log('req.session', req.session);
       res.send("BadLogin");
     }
-  });
+  })
+ });
 });
 
 
@@ -221,15 +230,16 @@ app.post('/signup', (req, res) => {
       userName: req.body.user
     }
   }).then(user => {
-    if (user.map(ind => {
-        return ind.dataValues;
-      }).length > 0) {
+    if (user.length > 0) {
       console.log('this is req.sesion', req.session);
       res.send('UserAlreadyExists');
     } else {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.pass, salt);
       users.create({
         userName: req.body.user,
-        password: req.body.pass
+        password: hash,
+        salt: salt,
       }).then(entry => {
         console.log(entry.dataValues, ' got entered');
         req.session.userName = req.body.user;
@@ -241,8 +251,14 @@ app.post('/signup', (req, res) => {
 
 app.get('/MakeInstrument', (req, res) => {
   console.log("youre trying to access make Instrument!!!")
+ if (!req.session.userName&&!req.session.passport){
   res.redirect("/login");
+  } else {
+    console.log("Do nothing")
+  }
 });
+
+
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 

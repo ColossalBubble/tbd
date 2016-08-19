@@ -13,6 +13,9 @@ const users = sequelize.define('user', {
   },
   token: {
     type: Sequelize.STRING
+  },
+  salt: {
+    type: Sequelize.STRING
   }
 }, {
   tableName: 'users',
