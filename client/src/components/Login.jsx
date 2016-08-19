@@ -8,8 +8,8 @@ import { showErrorMessage } from '../utils/helperFunctions';
 class Login extends Component {
 
   helperLogin() {
-    const user=$('#UNLogin').val();
-    const pass= $('#UNPass').val();
+    const user=$('#UserNameLogin').val();
+    const pass= $('#UserNamePass').val();
     $.post("/login", { user: user, pass: pass }, (resp) => {
       if (resp==="Succ") {
         this.props.logIn(user);
@@ -23,8 +23,8 @@ class Login extends Component {
   render() {
     return (
       <div id="loginContent">
-        Username:<TextField id="UNLogin" /><br />
-        Password:<TextField id="UNPass" type="password" /><br />
+       <TextField floatingLabelText="UserName" hintText="Watch caps lock" id="UserNameLogin" /><br />
+       <TextField floatingLabelText="Password" hintText="Watch caps lock" id="UserNamePass" type="password" /><br />
         <RaisedButton label="Login" onClick={() => { this.helperLogin(); }} / >
         <Link to="signup"><RaisedButton label="Click to signup" /></Link>
         <div id="LIMessages"><br /> </div>

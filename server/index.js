@@ -24,7 +24,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
 app.use(express.static(pathToStaticDir));
-app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(expressSession({
+  secret: process.env.sessions_secret,
+  resave: true,
+  saveUninitialized: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -180,7 +184,7 @@ app.get('/logout', (req, res) => {
   }
   req.logout();
   console.log('mysession after logout', req.session);
-  res.send('N/A!');
+  res.sendStatus(200);
 });
 
 app.post('/login', (req, res) => {
@@ -212,8 +216,8 @@ app.post('/signup', (req, res) => {
     }
   }).then(user => {
     if (user.map(ind => {
-      return ind.dataValues;
-    }).length > 0) {
+        return ind.dataValues;
+      }).length > 0) {
       console.log('this is req.sesion', req.session);
       res.send('UserAlreadyExists');
     } else {
@@ -233,11 +237,13 @@ app.post('/signup', (req, res) => {
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { successReturnToOrRedirect: '/', failureRedirect: '/login' }
-      ));
+  passport.authenticate('facebook', {
+    successReturnToOrRedirect: '/',
+    failureRedirect: '/login'
+  }));
+
 
 app.get("/fbLoggedIn?", (req, res) => {
-
   console.log(req.session.passport);
   res.send(req.session.passport?"true":"false")
 });

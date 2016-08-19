@@ -22,7 +22,7 @@ const users = sequelize.define('user', {
 
 sequelize
   .sync({ force: false })
-  .then(err => {
+  .then( () => {
     console.log('It worked!');
   }, err => {
     console.log('An error occurred while creating the table:', err);

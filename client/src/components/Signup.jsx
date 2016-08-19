@@ -9,8 +9,8 @@ class Signup extends Component {
 
 
   helperSignup() {
-    const user=$('#UNSignUp').val();
-    const pass= $('#UNSPass').val();
+    const user=$('#UserNameSignUp').val();
+    const pass= $('#UserNamePass').val();
     if (user.length<7) {
       showErrorMessage("#SIMessages", 'Username must be 7+ characters', "notLongEnough");
     } else if (pass.length<7) {
@@ -31,8 +31,8 @@ class Signup extends Component {
     return (
       <div id="signupContent">
 
-        Username:<TextField id="UNSignUp" type="text" /><br />
-        Password:<TextField id="UNSPass" type="password" /><br />
+        <TextField floatingLabelText="UserName" hintText="Must be 7+ characters" id="UserNameSignUp" type="text" /><br />
+        <TextField floatingLabelText="Password" hintText="Must be 7+ characters" id="UserNamePass" type="password" /><br />
         <RaisedButton label="Signup" onClick={() => { this.helperSignup(); }} />
         <Link to="login" ><RaisedButton label="Click to Login Instead" /> </Link >
         <div id="SIMessages"><br /> </div>

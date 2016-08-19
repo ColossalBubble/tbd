@@ -44,7 +44,7 @@ class LandingPage extends React.Component {
     return (
       <div id="landingPage">
 
-        <section className="title">l
+        <section className="title">
         </section>
         {/*
         <section className="joinRoom">

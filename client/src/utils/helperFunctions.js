@@ -1,19 +1,19 @@
-//utils!!!
+//Utils!
+
 import $ from 'jquery';
 
-function showErrorMessage(appendTo,message,id){
- $(appendTo)
-        .append('<div id='+ '"'+id+ '"' + '>'+ message+' </div>')
-        .hide()
-        .fadeIn(999)
-        .fadeOut(999)
-        .queue(next => {
-          $(`#${id}`).remove();
-          next();
-        });
+function showErrorMessage(appendTo, message, id) {
+  $(appendTo)
+    .append(`<div id=+""+${id}+""+ > ${message} </div>`)
+    .hide()
+    .fadeIn(999)
+    .fadeOut(999)
+    .queue(next => {
+      $(`#${id}`).remove();
+      next();
+    });
 }
 
- 
 
 
 function addKeyHelper(id){
@@ -36,9 +36,12 @@ function addKeyHelper(id){
           </form>
 
         <form>
-        Select A Sound: <input id="key_${id}" type="file" name="pic" accept="audio/*" />
+        Select Some parameters SoundParam1: <input type="text"  /><br>
+        SoundParam2: <input type="text"  /><br>
+        SoundParam3: <input type="text"  /><br>
+        SoundParam4: <input type="text"  />
         </form>
-        <button id ="sampleSound_${id}" class='sampleSound'>Sample sound you uploaded!</button>
+        <button id ="sampleSound_${id}" class='sampleSound'>Sample sound !</button>
       </div>`);
 }
 
