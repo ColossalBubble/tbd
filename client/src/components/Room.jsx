@@ -1,7 +1,5 @@
 // Modules
 import React from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
-import classnames from 'classnames';
 
 // Components
 import SelectInstrument from '../components/SelectInstrument';
@@ -20,7 +18,7 @@ class Room extends React.Component {
     super(props);
     this.state = {
       connected: connectionManager.isConnected(),
-      instrument: null,
+      instrument: 'piano',
       startJam: false,
       peers: [],
     };
@@ -72,9 +70,7 @@ class Room extends React.Component {
         keyPressed: e.key
       }));
     }
-    if (this.state.instrument) {
-      store[this.state.instrument](e.key);
-    }
+    store[this.state.instrument](e.key);
   }
 
   handleStart() {
@@ -88,8 +84,9 @@ class Room extends React.Component {
     this.setSocketListeners();
   }
 
-  selectInstrument(instrument) {
-    this.setState({ instrument });
+  selectInstrument(index) {
+    const instruments = ['piano', 'drums', 'laserbells'];
+    this.setState({ instrument: instruments[index] });
   }
 
   updateConnection() {
@@ -103,6 +100,10 @@ class Room extends React.Component {
       peerId: connectionManager.peerSocket().id,
       roomId: this.props.params.roomId,
     };
+
+    // for join room update
+    connectionManager.peerSocket().emit('instrument select', peerInfo);
+
     // send own info out
     connectionManager.peerSocket().emit('peer info', peerInfo);
     // ask for info
@@ -138,21 +139,12 @@ class Room extends React.Component {
   }
 
   render() {
-    const opacity = instrument => classnames({ selected: this.state.instrument === instrument }, 'instrument');
     return (
       <div>
         {
           this.state.startJam ?
             <JamRoom instrument={this.state.instrument} peers={this.state.peers} /> :
-            <div>
-              <SelectInstrument handleClick={this.selectInstrument} opacity={opacity} />
-              <RaisedButton
-                style={{ bottom: "0", position: "absolute" }}
-                label="Start"
-                onClick={this.handleStart}
-                disabled={!this.state.connected || !this.state.instrument}
-              />
-            </div>
+            <SelectInstrument handleSelect={this.selectInstrument} handleClick={this.handleStart} />
         }
       </div>
     );

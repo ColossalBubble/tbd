@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';
 import JamRoom from './components/JamRoom';
 import Room from './components/Room';
+import CreateOrJoin from './components/CreateOrJoin';
 import Invalid from './components/Invalid';
 import Metronome from './components/Metronome';
 import UserMakeInstrument from './components/UserMakeInstrument';
@@ -24,6 +25,7 @@ render((
       <Route path="login" component={Login} />
       <Route path="signup" component={Signup} />
       <Route path="room/:roomId" component={Room} />
+      <Route path="createorjoin" component={CreateOrJoin} />
       <Route path="metronome" component={Metronome} />
       <Route path="MakeInstrument" component={UserMakeInstrument} />
       <Route path="*" component={Invalid} />
