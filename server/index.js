@@ -16,7 +16,7 @@ const server = http.createServer(app);
 const io = socketIO.listen(server);
 /* DB  */
 const users = require('./db/connection').users;
-
+const instruments = require('./db/connection').instruments;
 /* Middleware */
 app.use(cookieParser());
 app.use(logger('dev'));
@@ -155,7 +155,19 @@ io.on('connection', socket => {
 
 socket.on('newInstCreated', instrument => {
   console.log('this is a brand new instrument', instrument);
-})
+
+    instruments.findAll({
+    where: {
+      instrumentName:instrument.name
+    }
+  }).then(instrument => {
+     if (instrument.length)
+      return ind.dataValues;
+    }).length > 0
+    console.log('instruments of the same name',instrument);
+
+
+  })
 
 
 });

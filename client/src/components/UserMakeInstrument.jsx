@@ -54,7 +54,7 @@ sampleSound(){
   console.log("you should now here your uploaded sound");
 }
 
-activatePiano(){
+activatePiano() {
    console.log('run av piano');
   function test(e){console.log(e);store['piano'](e)};
   $(document).off();
@@ -62,7 +62,7 @@ activatePiano(){
   $(document).on("keydown", test);
 }
 
-activateFry(){
+activateFry() {
   console.log('run av fry');
   function test(e){console.log(e);store['fry'](e)};
   $(document).off();
@@ -72,7 +72,8 @@ activateFry(){
   
   makeInstrument() {
     var name= $("#userInstName").val()
-    var inMemObject = {name:}
+    console.log(name, "THE NAME!!!")
+    var inMemObject = {name:name};
     var repeat = false;
     const keys = $(".selectKey option:selected").text();
 
