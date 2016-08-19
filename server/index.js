@@ -152,6 +152,12 @@ io.on('connection', socket => {
   socket.on('give peer info', info => {
     io.to(`/#${info.sendTo}`).emit('peer info', info);
   });
+
+socket.on('newInstCreated', instrument => {
+  console.log('this is a brand new instrument', instrument);
+})
+
+
 });
 
 /* Routes */
