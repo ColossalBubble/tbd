@@ -5,7 +5,8 @@ const socket = io();
 import { Link } from 'react-router';
 import store from '../instruments/store';
 import TextField from 'material-ui/TextField';
-
+import store from '../instruments/store';
+import { MonoSynth } from 'tone';
 
 
 class UserMakeInstrument extends Component {
