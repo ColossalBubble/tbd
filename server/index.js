@@ -10,7 +10,7 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const expressSession=require('express-session');
 const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
-require("dotenv").config()
+require("dotenv").config();
 /* Init */
 const app = express();
 const server = http.createServer(app);
@@ -202,7 +202,6 @@ socket.on('newInstCreated', instrument => {
       L:JSON.stringify(instrument.L)
     }).then(instrumentEntry => {
      console.log(instrumentEntry.dataValues, ' got entered');
-
   });
 
 });
@@ -258,9 +257,7 @@ app.post('/login', (req, res) => {
       userName: req.body.user,
     }
   }).then(person => {
-    console.log(person[0].dataValues.salt,'person salt');
- const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt)
- 
+ const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt);
 
 users.findAll({
     where: {
@@ -274,9 +271,10 @@ users.findAll({
     instruments=>{
      return instruments.map(a => a.dataValues);
     }).then(instruments=> {
+
     console.log("succ logged in",instruments);
       req.session.userName = req.body.user;
-      res.send(JSON.stringify(instruments));
+      res.send(instruments);
 
     })
 

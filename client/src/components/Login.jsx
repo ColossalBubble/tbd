@@ -13,8 +13,8 @@ class Login extends Component {
     $.post("/login", { user: user, pass: pass }, (resp) => {
       if (resp.length>0) {
 
-        console.log(resp)
-        this.props.logIn(user,resp);
+        console.log(resp, this.props.updateUserInstrument);
+        this.props.logIn(user, resp);
         this.context.router.push('/');
       } else {
         showErrorMessage("#LIMessages", 'Bad login', "badLogin");

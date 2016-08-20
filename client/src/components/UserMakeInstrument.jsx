@@ -34,6 +34,8 @@ const keyToNote = {
   108: 'F5',
 };
 
+
+
 class UserMakeInstrument extends Component {
 
   constructor(props, context) {
@@ -89,15 +91,18 @@ zimit.triggerAttackRelease(keyToNote[e.which], '8n');
 
     this.setState({
       inMemObject: {}
-    })
+    });
 
     socket.emit('newInstCreated', currentInMemObj);
     console.log("you've created " + JSON.stringify(currentInMemObj));
+    const final = this.props.userInstruments.concat([currentInMemObj]);
+    this.props.updateUserInstrument(final);
+
   }
 
   changeInst(){
-    console.log("inst changed")
-    const inst=$(".selectInst option:selected").text()
+    console.log("inst changed");
+    const inst=$(".selectInst option:selected").text();
     this.setState({
       instrument:inst
      });
@@ -105,8 +110,7 @@ zimit.triggerAttackRelease(keyToNote[e.which], '8n');
 
 
   render() {
-    console.log(this.props.user,'user in the house!!!!!',this.inMemObject);
-    
+console.log(this.props.userInstruments);
     return (
     
       <div id="UserMakeInstrumentRoom">
