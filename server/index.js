@@ -252,7 +252,6 @@ app.get('/logout', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-console.log('req.body.pass',req.body.pass);
 
   users.findAll({
     where: {
@@ -261,7 +260,7 @@ console.log('req.body.pass',req.body.pass);
   }).then(person => {
     console.log(person[0].dataValues.salt,'person salt');
  const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt)
- console.log('this is the hash',hash)
+ 
 
 users.findAll({
     where: {
@@ -270,13 +269,25 @@ users.findAll({
     }
   }).then(user => {
     if (user.length > 0) {
-      console.log("succ logged in");
+
+ instruments.findAll({where:{userName: req.body.user}}).then(
+    instruments=>{
+     return instruments.map(a => a.dataValues);
+    }).then(instruments=> {
+    console.log("succ logged in",instruments);
       req.session.userName = req.body.user;
-      res.send("Succ");
+      res.send(JSON.stringify(instruments));
+
+    })
+
+
+  
     } else {
+
+
       console.log('BadLogin');
       console.log('req.session', req.session);
-      res.send("BadLogin");
+      res.send("");
     }
   })
  });

@@ -5,9 +5,34 @@ const socket = io();
 import { Link } from 'react-router';
 import store from '../instruments/store';
 import TextField from 'material-ui/TextField';
-import store from '../instruments/store';
-import { MonoSynth } from 'tone';
+import { MembraneSynth } from 'tone';
 
+const config = {
+  pitchDecay: 0.1,
+  octaves: 7,
+  oscillator: {
+    type: 'sine',
+  },
+  envelope: {
+    attack: 0.001,
+    decay: 0.1,
+    sustain: 0.1,
+    release: 2,
+    attackCurve: 'linear'
+  }
+};
+const zimit = new MembraneSynth(config).toMaster();
+const keyToNote = {
+  97: 'E4',
+  115: 'F4',
+  100: 'G4',
+  102: 'A4',
+  103: 'B4',
+  104: 'C5',
+  106: 'D5',
+  107: 'E5',
+  108: 'F5',
+};
 
 class UserMakeInstrument extends Component {
 
@@ -32,6 +57,13 @@ class UserMakeInstrument extends Component {
 
   sampleSound() {
     console.log("you should now here your uploaded sound");
+ $(document).unbind('keydown')
+ $(document).off();
+ $(document).keypress(function (e) {
+    console.log(e.which);
+zimit.triggerAttackRelease(keyToNote[e.which], '8n');
+});
+
   }
 
   mapThat() {

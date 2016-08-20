@@ -11,6 +11,7 @@ class App extends Component {
     this.state={
       loggedIn: false,
       user: "",
+      userInstruments:[],
     };
     this.logIn=this.logIn.bind(this);
     this.logOut=this.logOut.bind(this);
@@ -20,10 +21,11 @@ class App extends Component {
     return { muiTheme: getMuiTheme(baseTheme) };
   }
 
-  logIn(userName) {
+  logIn(userName,userInstruments) {
     this.setState({
       loggedIn: true,
       user: userName,
+      userInstruments:[],
     });
   }
 

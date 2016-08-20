@@ -11,8 +11,10 @@ class Login extends Component {
     const user=$('#UserNameLogin').val();
     const pass= $('#UserNamePass').val();
     $.post("/login", { user: user, pass: pass }, (resp) => {
-      if (resp==="Succ") {
-        this.props.logIn(user);
+      if (resp.length>0) {
+
+        console.log(resp)
+        this.props.logIn(user,resp);
         this.context.router.push('/');
       } else {
         showErrorMessage("#LIMessages", 'Bad login', "badLogin");
@@ -23,8 +25,8 @@ class Login extends Component {
   render() {
     return (
       <div id="loginContent">
-       <TextField floatingLabelText="UserName" hintText="Watch caps lock" id="UserNameLogin" /><br />
-       <TextField floatingLabelText="Password" hintText="Watch caps lock" id="UserNamePass" type="password" /><br />
+        <TextField floatingLabelText="UserName" hintText="Watch caps lock" id="UserNameLogin" /><br />
+        <TextField floatingLabelText="Password" hintText="Watch caps lock" id="UserNamePass" type="password" /><br />
         <RaisedButton label="Login" onClick={() => { this.helperLogin(); }} / >
         <Link to="signup"><RaisedButton label="Click to signup" /></Link>
         <div id="LIMessages"><br /> </div>

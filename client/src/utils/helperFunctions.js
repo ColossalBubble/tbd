@@ -17,4 +17,3 @@ function showErrorMessage(appendTo, message, id) {
 
 
 module.exports.showErrorMessage=showErrorMessage;
-module.exports.addKeyHelper=addKeyHelper;
