@@ -1,12 +1,20 @@
+/***************/
+/*** Modules ***/
+/***************/
 import React from 'react';
+
+/*******************/
+/*** Material-Ui ***/
+/*******************/
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 import shortid from 'shortid';
 import Paper from 'material-ui/Paper';
 
-const io = require('socket.io-client');
-
-const socket = io();
+/*********************************/
+/*** Mordor Socket (or Util) ***/
+/*********************************/
+import socket from '../utils/socket';
 
 const materialStyles = {
   position: 'absolute',

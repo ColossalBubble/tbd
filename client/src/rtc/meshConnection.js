@@ -1,6 +1,8 @@
+import socket from '../utils/socket';
+
 const SimplePeer = require('simple-peer');
 const EventEmitter = require('events').EventEmitter;
-const io = require('socket.io-client');
+
 
 const emitter = new EventEmitter();
 const peers = {};
@@ -19,8 +21,6 @@ const options = {
   }
 };
 
-const socket = io();
-
 export default function (room) {
   let selfId;
 
@@ -28,7 +28,9 @@ export default function (room) {
 
   // socket joined a room, start making connections
   socket.on('joined', sockets => {
-    selfId = sockets.pop().peerId;
+    if (sockets.length !== 0) {
+      selfId = sockets.pop().peerId;
+    }
     // if first one in room, done
     if (sockets.length === 0) {
       emitter.emit('connected');
