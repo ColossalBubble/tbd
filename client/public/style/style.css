@@ -523,11 +523,13 @@ font-size: 30px;
 #signupContent { 
   position:absolute;
   top:30%;
+  left:40%;
 }
 
 #loginContent {
   position:absolute;
   top:30%;
+  left:40%;
 }
 
 #UserMakeInstrumentRoom {
