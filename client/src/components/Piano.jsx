@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import AudioSynth from 'audiosynth';
-import $ from 'jquery';
 const AudioContext = window.AudioContext || window.webkitAudioContext;
 const context = new AudioContext();
 const Synth = new AudioSynth(context);
@@ -55,6 +54,7 @@ function blackKeyHelper(ID) {
 }
 
 $(document).keypress((e) => {
+  console.log('key press')
   if (e.which === 97) {
     keyHelper("#1");
   } else if (e.which=== 115) {
