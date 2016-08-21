@@ -8,10 +8,13 @@ import { showErrorMessage } from '../utils/helperFunctions';
 class Login extends Component {
 
   helperLogin() {
+
     const user=$('#UserNameLogin').val();
     const pass= $('#UserNamePass').val();
     $.post("/login", { user: user, pass: pass }, (resp) => {
-      if (resp.length>0) {
+      console.log(typeof resp,resp,'resp!');
+      if (typeof resp !=='string') {
+
 
         console.log(resp, this.props.updateUserInstrument);
         this.props.logIn(user, resp);

@@ -258,6 +258,7 @@ app.post('/login', (req, res) => {
     }
   }).then(person => {
 if (person[0]===undefined) {
+  console.log('line 261 case caught')
     console.log('BadLogin');
       console.log('req.session', req.session);
       res.send("");
@@ -277,7 +278,7 @@ users.findAll({
     instruments=>{
      return instruments.map(a => a.dataValues);
     }).then(instruments=> {
-
+       console.log('line 281 case caught')
     console.log("succ logged in",instruments);
       req.session.userName = req.body.user;
       res.send(instruments);
@@ -286,7 +287,7 @@ users.findAll({
 
     } else {
 
-
+     console.log('line 290 case caught')
       console.log('BadLogin');
       console.log('req.session', req.session);
       res.send("");
