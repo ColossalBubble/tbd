@@ -40,23 +40,23 @@ passport.use(new FacebookStrategy({
 },
 
   (accessToken, refreshToken, profile, done) => {
-    console.log('this is the profile', profile.id);
+    console.log('this is the profile', profile);
     users.findAll({ where: { facebookId: profile.id }
   }).then(user => {
     if (user.length > 0) {
-      console.log('user already exists', user[0]);
+      //console.log('user already exists', user[0]);
       //console.log('this is req.sesion', req.session);
       return done(null, user);
     } else {
       users.create({
-        userName: ` ${profile.name.givenName} ${profile.name.familyName}`,
+        userName: `${profile.displayName}`,
         password: "N/A",
         facebookId: profile.id,
         token: accessToken,
       }).then(entry => {
         //console.log('this is req.sesion', req.session);
-        console.log('this is entry for a newly added user', entry.dataValues.id);
-        console.log(entry.dataValues, ' got entered', entry);
+       // console.log('this is entry for a newly added user', entry.dataValues.id);
+       // console.log(entry.dataValues, ' got entered', entry);
         return done(null, entry.dataValues.id);
       });
     }
