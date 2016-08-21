@@ -189,8 +189,8 @@ socket.on('newInstCreated', instrument => {
 
 
     instruments.create({
-      userName:instrument.userName,
-      instrumentName:instrument.name,
+      userName: instrument.userName,
+      instrumentName: instrument.name,
       A:JSON.stringify(instrument.A),
       S:JSON.stringify(instrument.S),
       D:JSON.stringify(instrument.D),
@@ -257,6 +257,12 @@ app.post('/login', (req, res) => {
       userName: req.body.user,
     }
   }).then(person => {
+if (person[0]===undefined) {
+    console.log('BadLogin');
+      console.log('req.session', req.session);
+      res.send("");
+    } else  {
+      console.log(person[0], 'Person[0]!!!')
  const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt);
 
 users.findAll({
@@ -278,8 +284,6 @@ users.findAll({
 
     })
 
-
-  
     } else {
 
 
@@ -287,7 +291,8 @@ users.findAll({
       console.log('req.session', req.session);
       res.send("");
     }
-  })
+  });
+}
  });
 });
 
