@@ -28,6 +28,14 @@ class UserMakeInstrument extends Component {
     $('.sampleSound').click(() => {
       this.sampleSound();
     });
+
+    $.get("/userLoggedInToMakeInst", (resp, err) => {
+      console.log(resp);
+      if (resp.length===0){
+        console.log('youre not logged in!');
+        this.context.router.push("login");
+      }
+    });
   }
 
   componentWillUnmount() {
@@ -321,6 +329,11 @@ class UserMakeInstrument extends Component {
 UserMakeInstrument.propTypes = {
   params: React.PropTypes.object
 };
+
+UserMakeInstrument.contextTypes = {
+  router: React.PropTypes.object
+};
+
 
 UserMakeInstrument.childContextTypes = {
   muiTheme: React.PropTypes.object.isRequired,

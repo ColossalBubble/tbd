@@ -313,15 +313,6 @@ app.post('/signup', (req, res) => {
   });
 });
 
-app.get('/MakeInstrument', (req, res) => {
-  console.log("youre trying to access make Instrument!!!");
- if (!req.session.userName&&!req.session.passport) {
-  res.redirect("/login");
-  } else {
-    console.log("Do nothing");
-  }
-});
-
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
 app.get('/auth/facebook/callback',
@@ -330,6 +321,9 @@ app.get('/auth/facebook/callback',
     failureRedirect: '/login'
   }));
 
+app.get("/userLoggedInToMakeInst", (req, res) => {
+  res.send(req.session.userName||req.session.passport);
+});
 
 app.get("/fbLoggedIn?", (req, res) => {
   console.log(req.session.passport);
