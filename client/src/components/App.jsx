@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
-
-// for future material ui use
-import baseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import Nav from '../components/Nav';
-//
+
+const customTheme = {
+  palette: {
+    primary1Color: "#8D7965",
+    primary2Color: "#8D7965",
+    primary3Color: "#8D7965"
+  }
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -19,7 +24,7 @@ class App extends Component {
   }
 
   getChildContext() {
-    return { muiTheme: getMuiTheme(baseTheme) };
+    return { muiTheme: getMuiTheme(customTheme) };
   }
 
   updateUserInstrument(totalInstruments) {

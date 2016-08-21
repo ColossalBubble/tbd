@@ -278,7 +278,7 @@ users.findAll({
     instruments=>{
      return instruments.map(a => a.dataValues);
     }).then(instruments=> {
-       console.log('line 281 case caught')
+       console.log('line 281 case caught');
     console.log("succ logged in",instruments);
       req.session.userName = req.body.user;
       res.send(instruments);
@@ -350,7 +350,8 @@ app.get("/fbLoggedIn?", (req, res) => {
 
 
 app.get('*', (req, res) => {
-  console.log('req.session',req.session);
+  console.log('Cookies: ', req.cookies)
+  console.log('req.session', req.session);
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
 });
