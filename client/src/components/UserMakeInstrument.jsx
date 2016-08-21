@@ -9,6 +9,30 @@ const io = require('socket.io-client');
 
 const socket = io();
 
+    const mapIdsToKeys={
+      '#1': 'A',
+      '#2': 'S',
+      '#3': 'D',
+      '#4': 'F',
+      '#5': 'G',
+      '#6': 'H',
+      '#7': 'H',
+      '#8': 'K',
+      '#9': 'L',
+    };
+
+    const mapKeysToIds={
+      'A': '#1',
+      'S': '#2',
+      'D': '#3',
+      'F': '#4',
+      'G': '#5',
+      'H': '#6',
+      'J': '#7',
+      'K': '#8',
+      'L': '#9',
+    };
+
 class UserMakeInstrument extends Component {
 
   constructor(props, context) {
@@ -30,6 +54,7 @@ class UserMakeInstrument extends Component {
         this.sampleSound();
       });
     }
+
     $(document).keypress((e) => {
   console.log(e.which);
   if (e.which === 97) {
@@ -54,19 +79,14 @@ class UserMakeInstrument extends Component {
   });
 }
 
+componentWillUnmount() {
+
+    $(document).off();
+    $(document).off("keypress");
+  }
+
   keyHelper(ID) {
 
-    const mapIdsToKeys={
-      '#1': 'A',
-      '#2': 'S',
-      '#3': 'D',
-      '#4': 'F',
-      '#5': 'G',
-      '#6': 'H',
-      '#7': 'H',
-      '#8': 'K',
-      '#9': 'L',
-    };
 
     const keyInfo=this.state.inMemObject[mapIdsToKeys[ID]];
     console.log('keyinfo', keyInfo);
@@ -84,10 +104,10 @@ class UserMakeInstrument extends Component {
   }
 
   sampleSound() {
-    const par1=$("#par1").val();
-    const par2=$("#par2").val();
+    const par1=$("#par1 option:selected").text();
+    const par2=$("#par2 option:selected").text();
     const par3=Number($("#par3").val());
-    const par4=$("#par4").val();
+    const par4=$("#par4 option:selected").text();
     const combo= `${par1}${par2}`;
     const inst = $(".selectInst option:selected").text();
     console.log(`play a ${combo} sound on the ${inst}`);
@@ -110,10 +130,10 @@ class UserMakeInstrument extends Component {
   }
 
   mapThat() {
-    const par1=$("#par1").val();
-    const par2=$("#par2").val();
+    const par1=$("#par1 option:selected").text();
+    const par2=$("#par2 option:selected").text();
     const par3=$("#par3").val();
-    const par4=$("#par4").val();
+    const par4=$("#par4 option:selected").text();
     const key = $(".selectKey option:selected").text();
     const inst = $(".selectInst option:selected").text();
     const currentInMemObj = this.state.inMemObject;
@@ -122,11 +142,17 @@ class UserMakeInstrument extends Component {
       console.log('please make a proper mapping');
       showErrorMessage("#makeInstErrorMessages", 'Please make a Proper Mapping', 'propMapError');
     } else {
-      $(".par").val("");
+      $("#par1").val("A");
+      $("#par2").val("1");
+      $("#par3").val("0.1");
+      $("#par4").val("sine");
       this.setState({
         inMemObject: currentInMemObj
       });
     }
+  const idToAdd=mapKeysToIds[key];
+  console.log('idToAdd', idToAdd);
+     $(idToAdd).css("border", "5px solid blue");
   }
 
 
@@ -158,6 +184,12 @@ class UserMakeInstrument extends Component {
       const final = this.props.userInstruments.concat([currentInMemObj]);
       this.props.updateUserInstrument(final);
       showErrorMessage("#makeInstErrorMessages", 'InstrumentMade!', 'makeThat');
+      $("#par1").val("A");
+      $("#par2").val("1");
+      $("#par3").val("0.1");
+      $("#par4").val("sine");
+      $(".key").css("border", "2px solid black");
+
     }
   }
 
@@ -169,6 +201,10 @@ class UserMakeInstrument extends Component {
     this.setState({
       inMemObject: newInMemObj,
      });
+
+  const idToClear=mapKeysToIds[keyToDelete];
+  console.log('idToAdd', idToClear);
+     $(idToClear).css("border", "2px solid black");
   }
   changeInst() {
     console.log("inst changed");
@@ -195,7 +231,6 @@ class UserMakeInstrument extends Component {
           <form>
             <select onChange={this.changeInst} name="insts">
               <option value="MembraneSynth">MembraneSynth</option>
-              <option value="Fry">Fry</option>
             </select>
           </form>
         </div>
@@ -219,14 +254,50 @@ class UserMakeInstrument extends Component {
         <button onClick={this.deleteKey}> Delete key </button>
         Select Some parameters:<br />
 
-        {this.state.instrument} Note: <input placeholder="A-6"className="par" id="par1" type="text" /><br />
-        {this.state.instrument} Octave <input placeholder="1-7" className="par" id="par2" type="text" /><br />
-        {this.state.instrument} pitchDecay: <input placeholder="0-50" className="par" id="par3" type="text" /><br />
-        {this.state.instrument} Sound Type: <input placeholder="sine, square, sawtooth,triangle" className="par" id="par4" type="text" /><br />
-
+        {this.state.instrument} Note: <select className="par" id="par1">
+                                            <option value="A">A</option>
+                                            <option value="B">B</option>
+                                            <option value="C">C</option>
+                                            <option value="D">D</option>
+                                            <option value="E">E</option>
+                                            <option value="F">F</option>
+                                            <option value="G">G</option>
+                                          </select><br />
+        {this.state.instrument} Octave <select className="par" id="par2">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="4">5</option>
+                                            <option value="4">6</option>
+                                            <option value="4">7</option>
+                                          </select><br />
+        {this.state.instrument} pitchDecay: <select className="par" id="par3">
+                                            <option value="0.1">0.1</option>
+                                            <option value="0.2">0.2</option>
+                                            <option value="0.3">0.3</option>
+                                            <option value="0.4">0.4</option>
+                                            <option value="0.5">0.5</option>
+                                            <option value="0.6">0.6</option>
+                                            <option value="0.7">0.7</option>
+                                            <option value="0.8">0.8</option>
+                                            <option value="0.9">0.9</option>
+                                            <option value="1">1</option>
+                                            <option value="1.1">1.1</option>
+                                            <option value="1.2">1.2</option>
+                                            <option value="1.3">1.3</option>
+                                            <option value="1.4">1.4</option>
+                                            <option value="1.5">1.5</option>
+                                          </select><br />
+        {this.state.instrument} Sound Type: <select className="par" id="par4">
+                                            <option value="sine">sine</option>
+                                            <option value="square">square</option>
+                                            <option value="sawtooth">sawtooth</option>
+                                            <option value="triangle">triangle</option>
+                                          </select> <br />
         <button id="sampleSound" className="sampleSound">Sample sound !</button>
         <button onClick = {this.mapThat}>Map that</button><br />
-        <input type="text" id='userInstName' />INPUT SHOULD BE HERE!<br /><br /> <br />
+        Name that:<input type="text" id='userInstName' /><br /><br /> <br />
         <button style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument.bind(this)}>Make the Instrument!</button>
         <br />
         <div id="makeInstErrorMessages" />
