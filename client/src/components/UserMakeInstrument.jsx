@@ -30,8 +30,58 @@ class UserMakeInstrument extends Component {
         this.sampleSound();
       });
     }
+    $(document).keypress((e) => {
+  console.log(e.which);
+  if (e.which === 97) {
+    this.keyHelper("#1");
+  } else if (e.which=== 115) {
+     this.keyHelper("#2");
+  } else if (e.which=== 100) {
+     this.keyHelper("#3");
+  } else if (e.which=== 102) {
+     this.keyHelper("#4");
+  } else if (e.which=== 103) {
+     this.keyHelper("#5");
+  } else if (e.which=== 104) {
+     this.keyHelper("#6");
+  } else if (e.which=== 106) {
+     this.keyHelper("#7");
+  } else if (e.which=== 107) {
+     this.keyHelper("#8");
+  } else if (e.which=== 108) {
+     this.keyHelper("#9");
   }
+  });
+}
 
+  keyHelper(ID) {
+
+    const mapIdsToKeys={
+      '#1': 'A',
+      '#2': 'S',
+      '#3': 'D',
+      '#4': 'F',
+      '#5': 'G',
+      '#6': 'H',
+      '#7': 'H',
+      '#8': 'K',
+      '#9': 'L',
+    };
+
+    const keyInfo=this.state.inMemObject[mapIdsToKeys[ID]];
+    console.log('keyinfo', keyInfo);
+    $("#par1").val(keyInfo[1]);
+    $("#par2").val(keyInfo[2]);
+    $("#par3").val(keyInfo[3]);
+    $("#par4").val(keyInfo[4]);
+    this.sampleSound();
+
+    $(ID).animate({
+      backgroundColor: "black",
+    }, 20).animate({
+      backgroundColor: "white",
+    }, 20);
+  }
 
   sampleSound() {
     const par1=$("#par1").val();
@@ -129,24 +179,8 @@ class UserMakeInstrument extends Component {
     });
   }
 
+
   render() {
-    const renderingOfInst= () => {
-      let final="";
-      for (var key in this.state.inMemObject) {
-
-        var real="";
-
-        for (var i=0;i<this.state.inMemObject[key].length; i++) {
-          if (this.state.inMemObject[key][i].length) {
-          real+=this.state.inMemObject[key][i]+',';
-          }
-        }
-        final += `key:${key}:${real}...`;
-        }
-     return final;
-    };
-
-      console.log(renderingOfInst());
 
     console.log(this.props.userInstruments);
     return (
@@ -154,8 +188,7 @@ class UserMakeInstrument extends Component {
         <h1>Make Instrument here!</h1>
         <div id='currentInst'> </div>
       Your current Instrument: <br />
-      {/*JSON.stringify(this.state.inMemObject)*/
-      renderingOfInst()}
+      {JSON.stringify(this.state.inMemObject)}
         <br />Select an instrument to try out:
 
         <div className="selectInst" id="selectInstID">
@@ -197,10 +230,24 @@ class UserMakeInstrument extends Component {
         <button style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument.bind(this)}>Make the Instrument!</button>
         <br />
         <div id="makeInstErrorMessages" />
+            <div>
+        <div className="key" id="1" >A</div>
+        <div className="key" id="2" >S</div>
+        <div className="key" id="3" >D</div>
+        <div className="key" id="4" >F</div>
+        <div className="key" id="5" >G</div>
+        <div className="key" id="6" >H</div>
+        <div className="key" id="7" >J</div>
+        <div className="key" id="8" >K</div>
+        <div className="key" id="9" >L</div>
+      </div>
       </div>
     );
   }
 }
+ 
+
+
 
 UserMakeInstrument.propTypes = {
   params: React.PropTypes.object

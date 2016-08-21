@@ -54,7 +54,7 @@ function blackKeyHelper(ID) {
 }
 
 $(document).keypress((e) => {
-  console.log('key press')
+
   if (e.which === 97) {
     keyHelper("#1");
   } else if (e.which=== 115) {
