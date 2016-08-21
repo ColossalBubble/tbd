@@ -44,8 +44,6 @@ passport.use(new FacebookStrategy({
     users.findAll({ where: { facebookId: profile.id }
   }).then(user => {
     if (user.length > 0) {
-      //console.log('user already exists', user[0]);
-      //console.log('this is req.sesion', req.session);
       return done(null, user);
     } else {
       users.create({
@@ -54,7 +52,7 @@ passport.use(new FacebookStrategy({
         facebookId: profile.id,
         token: accessToken,
       }).then(entry => {
-        //console.log('this is req.sesion', req.session);
+       //console.log('this is req.sesion', req.session);
        // console.log('this is entry for a newly added user', entry.dataValues.id);
        // console.log(entry.dataValues, ' got entered', entry);
         return done(null, entry.dataValues.id);
@@ -184,27 +182,25 @@ io.on('connection', socket => {
     io.to(`/#${info.sendTo}`).emit('peer info', info);
   });
 
-socket.on('newInstCreated', instrument => {
-  console.log('this is a brand new instrument', instrument,instrument.A);
-
+  socket.on('newInstCreated', instrument => {
+    console.log('this is a brand new instrument', instrument,instrument.A);
 
     instruments.create({
       userName: instrument.userName,
       instrumentName: instrument.name,
-      A:JSON.stringify(instrument.A),
-      S:JSON.stringify(instrument.S),
-      D:JSON.stringify(instrument.D),
-      F:JSON.stringify(instrument.F),
-      G:JSON.stringify(instrument.G),
-      H:JSON.stringify(instrument.H),
-      J:JSON.stringify(instrument.J),
-      K:JSON.stringify(instrument.K),
-      L:JSON.stringify(instrument.L)
+      A: JSON.stringify(instrument.A),
+      S: JSON.stringify(instrument.S),
+      D: JSON.stringify(instrument.D),
+      F: JSON.stringify(instrument.F),
+      G: JSON.stringify(instrument.G),
+      H: JSON.stringify(instrument.H),
+      J: JSON.stringify(instrument.J),
+      K: JSON.stringify(instrument.K),
+      L: JSON.stringify(instrument.L)
     }).then(instrumentEntry => {
-     console.log(instrumentEntry.dataValues, ' got entered');
+      console.log(instrumentEntry.dataValues, ' got entered');
+    });
   });
-
-});
 
 
   socket.on('get rooms info', id => {
@@ -242,7 +238,7 @@ socket.on('newInstCreated', instrument => {
 /* Routes */
 app.get('/logout', (req, res) => {
   console.log('mysession', req.session);
-  if (req.session.userName){
+  if (req.session.userName) {
     delete req.session.userName;
   }
   req.logout();
@@ -251,50 +247,44 @@ app.get('/logout', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-
   users.findAll({
     where: {
       userName: req.body.user,
     }
   }).then(person => {
-if (person[0]===undefined) {
-  console.log('line 261 case caught')
-    console.log('BadLogin');
-      console.log('req.session', req.session);
-      res.send("");
-    } else  {
-      console.log(person[0], 'Person[0]!!!')
- const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt);
-
-users.findAll({
-    where: {
-      userName: req.body.user,
-      password:hash
-    }
-  }).then(user => {
-    if (user.length > 0) {
-
- instruments.findAll({where:{userName: req.body.user}}).then(
-    instruments=>{
-     return instruments.map(a => a.dataValues);
-    }).then(instruments=> {
-       console.log('line 281 case caught');
-    console.log("succ logged in",instruments);
-      req.session.userName = req.body.user;
-      res.send(instruments);
-
-    })
-
-    } else {
-
-     console.log('line 290 case caught')
+    if (person[0]===undefined) {
+      console.log('line 261 case caught');
       console.log('BadLogin');
       console.log('req.session', req.session);
       res.send("");
+    } else {
+      console.log(person[0], 'Person[0]!!!');
+      const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt);
+      users.findAll({
+        where: {
+          userName: req.body.user,
+          password: hash
+        }
+      }).then(user => {
+        if (user.length > 0) {
+          instruments.findAll({ where: { userName: req.body.user } }).then(
+            userInstruments => {
+              return userInstruments.map(a => a.dataValues);
+            }).then(userInstrumentsList => {
+              console.log('line 281 case caught');
+              console.log("succ logged in", userInstrumentsList);
+              req.session.userName = req.body.user;
+              res.send(userInstrumentsList);
+            });
+        } else {
+          console.log('line 290 case caught');
+          console.log('BadLogin');
+          console.log('req.session', req.session);
+          res.send("");
+        }
+      });
     }
   });
-}
- });
 });
 
 
@@ -324,15 +314,13 @@ app.post('/signup', (req, res) => {
 });
 
 app.get('/MakeInstrument', (req, res) => {
-  console.log("youre trying to access make Instrument!!!")
- if (!req.session.userName&&!req.session.passport){
+  console.log("youre trying to access make Instrument!!!");
+ if (!req.session.userName&&!req.session.passport) {
   res.redirect("/login");
   } else {
-    console.log("Do nothing")
+    console.log("Do nothing");
   }
 });
-
-
 
 app.get('/auth/facebook', passport.authenticate('facebook'));
 
@@ -350,7 +338,7 @@ app.get("/fbLoggedIn?", (req, res) => {
 
 
 app.get('*', (req, res) => {
-  console.log('Cookies: ', req.cookies)
+  console.log('Cookies: ', req.cookies);
   console.log('req.session', req.session);
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
