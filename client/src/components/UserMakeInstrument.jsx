@@ -16,6 +16,7 @@ class UserMakeInstrument extends Component {
     this.changeInst=this.changeInst.bind(this);
     this.killKeypress=this.killKeypress.bind(this);
     this.addKeypress=this.addKeypress.bind(this);
+    this.logIn= this.props.logIn.bind(this);
     this.state = {
       inMemObject: {},
       instrument: "MembraneSynth",
@@ -34,6 +35,8 @@ class UserMakeInstrument extends Component {
       if (resp.length===0){
         console.log('youre not logged in!');
         this.context.router.push("login");
+      } else {
+        this.logIn(resp,/*need to query db for instruments- or use middleware...*/);
       }
     });
   }
@@ -205,10 +208,7 @@ class UserMakeInstrument extends Component {
       });
 
   }
-
-   
   }
-
 
   changeInst() {
     console.log("inst changed");
