@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
 import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
+// import TextField from 'material-ui/TextField';
+// import DropDownMenu from 'material-ui/DropDownMenu';
+// import MenuItem from 'material-ui/MenuItem';
 import { MembraneSynth } from "tone";
 import { showErrorMessage, mapIdsToKeys, mapKeysToIds } from '../utils/helperFunctions';
+
 const io = require('socket.io-client');
 
 const socket = io();
@@ -35,7 +36,7 @@ class UserMakeInstrument extends Component {
 
     $.get("/userLoggedInToMakeInst", (resp, err) => {
       console.log(resp);
-      if (resp.length===0){
+      if (resp.length===0) {
         console.log('youre not logged in!');
         this.context.router.push("login");
       } else {
@@ -45,8 +46,8 @@ class UserMakeInstrument extends Component {
   }
 
   componentWillUnmount() {
-      $(document).off();
-      $(document).off("keypress");
+    $(document).off();
+    $(document).off("keypress");
   }
 
   keyHelper(ID) {
@@ -55,24 +56,20 @@ class UserMakeInstrument extends Component {
       console.log(ID, mapIdsToKeys[ID], this.state.inMemObject);
       const keyInfo=this.state.inMemObject[mapIdsToKeys[ID]];
       console.log('keyinfo', keyInfo, keyInfo===undefined);
-      console.log('runs regardless');
-
       if (keyInfo===undefined) {
-      
         showErrorMessage("#makeInstErrorMessages", 'Please Map To This Key', 'nonExistentMapError');
       } else {
-
-      $("#par1").val(keyInfo[1]);
-      $("#par2").val(keyInfo[2]);
-      $("#par3").val(keyInfo[3]);
-      $("#par4").val(keyInfo[4]);
-      this.sampleSound();
-      $(ID).animate({
-        backgroundColor: "black",
-      }, 20).animate({
-        backgroundColor: "white",
-      }, 20);
-     }
+        $("#par1").val(keyInfo[1]);
+        $("#par2").val(keyInfo[2]);
+        $("#par3").val(keyInfo[3]);
+        $("#par4").val(keyInfo[4]);
+        this.sampleSound();
+        $(ID).animate({
+          backgroundColor: "black",
+        }, 20).animate({
+          backgroundColor: "white",
+        }, 20);
+      }
     }
   }
 
@@ -123,15 +120,14 @@ class UserMakeInstrument extends Component {
         inMemObject: currentInMemObj
       });
     }
-  const idToAdd=mapKeysToIds[key];
-  console.log('idToAdd', idToAdd);
-     $(idToAdd).css("border", "5px solid blue");
+    const idToAdd=mapKeysToIds[key];
+    console.log('idToAdd', idToAdd);
+    $(idToAdd).css("border", "5px solid blue");
   }
 
 
   makeInstrument() {
     const name = $("#userInstName").val();
-    console.log()
     const currentInMemObj = this.state.inMemObject;
     currentInMemObj.name = name;
     currentInMemObj.userName = this.props.user;
@@ -168,16 +164,16 @@ class UserMakeInstrument extends Component {
 
   deleteKey() {
     const keyToDelete=$(".selectKey option:selected").text();
-    console.log('you want to delete'+ $(".selectKey option:selected").text());
+    console.log( "you want to delete"+ $(".selectKey option:selected").text());
     const newInMemObj=this.state.inMemObject;
     delete newInMemObj[keyToDelete];
     this.setState({
       inMemObject: newInMemObj,
-     });
+    });
 
-  const idToClear=mapKeysToIds[keyToDelete];
-  console.log('idToAdd', idToClear);
-     $(idToClear).css("border", "2px solid black");
+    const idToClear=mapKeysToIds[keyToDelete];
+    console.log('idToAdd', idToClear);
+    $(idToClear).css("border", "2px solid black");
   }
 
   killKeypress() {
@@ -207,7 +203,7 @@ class UserMakeInstrument extends Component {
     console.log("keypress should be enabled");
     if (this.state.tryingToName) {
       $(document).keypress((e) => {
-    console.log(e.which);
+        console.log(e.which);
         if (e.which === 97) {
           this.keyHelper("#1");
         } else if (e.which=== 115) {
@@ -228,11 +224,10 @@ class UserMakeInstrument extends Component {
           this.keyHelper("#9");
         }
       });
-       this.setState({
+      this.setState({
         tryingToName: false,
       });
-
-  }
+    }
   }
 
   changeInst() {
@@ -244,18 +239,12 @@ class UserMakeInstrument extends Component {
     });
   }
 
-
-
-
   render() {
-
-    console.log(this.props.userInstruments);
+    console.log('userInstruments', this.props.userInstruments);
     return (
       <div id="UserMakeInstrumentRoom">
         <h1>Make Instrument here!</h1>
-        <div id="currentInst" />
-    
-        <br />
+        <div id="currentInst" /> <br />
         <div className="selectKey" id="selectKeys_${id}">
            Select a Key to map to:
           <form>
@@ -272,11 +261,10 @@ class UserMakeInstrument extends Component {
             </select>
           </form>
         </div>
-        <RaisedButton label="Delete key" onClick={this.deleteKey} />  
+        <RaisedButton label="Delete key" onClick={this.deleteKey} />
         Select Some parameters:<br />
 
-        Note: 
-
+        Note:
         <select className="par" id="par1">
           <option value="A">A</option>
           <option value="B">B</option>
@@ -298,7 +286,7 @@ class UserMakeInstrument extends Component {
           <option value="4">6</option>
           <option value="4">7</option>
         </select><br />
-        pitchDecay: 
+        pitchDecay:
         <select className="par" id="par3">
           <option value="0.1">0.1</option>
           <option value="0.2">0.2</option>
@@ -316,14 +304,13 @@ class UserMakeInstrument extends Component {
           <option value="1.4">1.4</option>
           <option value="1.5">1.5</option>
         </select><br />
-        Sound Type: 
+        Sound Type:
         <select className="par" id="par4">
           <option value="sine">sine</option>
           <option value="square">square</option>
           <option value="sawtooth">sawtooth</option>
           <option value="triangle">triangle</option>
         </select> <br />
-        
         <RaisedButton label="Map That" onClick={this.mapThat} /><br />
         Name instrument:<input id="userInstName" onClick={this.killKeypress} /> <br /><br /> <br />
         <RaisedButton label="Make the instrument broh" style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument.bind(this)} />
@@ -362,11 +349,7 @@ UserMakeInstrument.childContextTypes = {
 };
 export default UserMakeInstrument;
 
-
-
-
   // <!--   <br />Select an instrument to try out:
-  
   //       <div className="selectInst" id="selectInstID">
   //         <form>
   //           <select onChange={this.changeInst} name="insts">
@@ -374,15 +357,3 @@ export default UserMakeInstrument;
   //           </select>
   //         </form>
   //       </div> -->
-
-
-
-
-
-
-
-
-
-
-
-
