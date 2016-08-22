@@ -19,7 +19,7 @@ class UserMakeInstrument extends Component {
     this.state = {
       inMemObject: {},
       instrument: "MembraneSynth",
-      tryingToName: false,
+      tryingToName: true,
     };
   }
 
@@ -176,9 +176,8 @@ class UserMakeInstrument extends Component {
 
   addKeypress() {
     console.log(this, 'this in addkeypress');
-    
     console.log("keypress should be enabled");
-    if (!this.state.tryingToName) {
+    if (this.state.tryingToName) {
       $(document).keypress((e) => {
     console.log(e.which);
         if (e.which === 97) {
@@ -201,12 +200,13 @@ class UserMakeInstrument extends Component {
           this.keyHelper("#9");
         }
       });
-  }
-
-    this.setState({
+       this.setState({
         tryingToName: false,
       });
 
+  }
+
+   
   }
 
 
