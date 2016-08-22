@@ -43,7 +43,6 @@ class LandingPage extends React.Component {
       <div id="landingPage">
 
         <section className="title">
-          <h1>WELCOME TO TBD!</h1>
         </section>
         {/*
         <section className="joinRoom">

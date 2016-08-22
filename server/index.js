@@ -4,24 +4,86 @@ const path = require('path');
 const logger = require('morgan');
 const http = require('http');
 const socketIO = require('socket.io');
-
+const bodyParser = require('body-parser');
+const passport = require('passport');
+const FacebookStrategy = require('passport-facebook').Strategy;
+const expressSession=require('express-session');
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
+require("dotenv").config();
 /* Init */
 const app = express();
 const server = http.createServer(app);
 const io = socketIO.listen(server);
-
+/* DB  */
+const users = require('./db/connection').users;
+const instruments = require('./db/connection').instruments;
 /* Middleware */
-
+app.use(cookieParser());
 app.use(logger('dev'));
-
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const pathToStaticDir = path.resolve(__dirname, '..', 'client/public');
-app.use(express.static(pathToStaticDir));
+app.use(express.static(pathToStaticDir, { redirect : false }));
+app.use(expressSession({
+  secret: process.env.sessions_secret,
+  resave: true,
+  saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-/* Sockets */
+passport.use(new FacebookStrategy({
+  clientID: process.env.client_Id,
+  clientSecret: process.env.client_Secret,
+  callbackURL: "http://localhost:3000/auth/facebook/callback"
+},
+
+  (accessToken, refreshToken, profile, done) => {
+    console.log('this is the profile', profile);
+    users.findAll({ where: { facebookId: profile.id }
+  }).then(user => {
+    if (user.length > 0) {
+      return done(null, user);
+    } else {
+      users.create({
+        userName: `${profile.displayName}`,
+        password: "N/A",
+        facebookId: profile.id,
+        token: accessToken,
+      }).then(entry => {
+       //console.log('this is req.sesion', req.session);
+       // console.log('this is entry for a newly added user', entry.dataValues.id);
+       // console.log(entry.dataValues, ' got entered', entry);
+        return done(null, entry.dataValues.id);
+      });
+    }
+  });
+  }
+));
+
+
+// serialize and deserialize
+passport.serializeUser((user, done) => {
+  const final = typeof user==="number"?user:user[0].dataValues.id;
+  console.log('this is the user param', user);
+  console.log('serializing!!!', final);
+  done(null, final);
+});
+
+passport.deserializeUser((id, done) => {
+  console.log('this is id in deserialize', id);
+  users.findAll({ where: { id: id } }).then(found => {
+    console.log('im trying to des this user', found[0].dataValues);
+    done(null, id);
+  });
+});
+
 
 const rooms = {};
 
 io.on('connection', socket => {
+
   console.log('Socket connected with ID: ', socket.id);
 
   socket.on('create room', roomId => {
@@ -120,6 +182,27 @@ io.on('connection', socket => {
     io.to(`/#${info.sendTo}`).emit('peer info', info);
   });
 
+  socket.on('newInstCreated', instrument => {
+    console.log('this is a brand new instrument', instrument,instrument.A);
+
+    instruments.create({
+      userName: instrument.userName,
+      instrumentName: instrument.name,
+      A: JSON.stringify(instrument.A),
+      S: JSON.stringify(instrument.S),
+      D: JSON.stringify(instrument.D),
+      F: JSON.stringify(instrument.F),
+      G: JSON.stringify(instrument.G),
+      H: JSON.stringify(instrument.H),
+      J: JSON.stringify(instrument.J),
+      K: JSON.stringify(instrument.K),
+      L: JSON.stringify(instrument.L)
+    }).then(instrumentEntry => {
+      console.log(instrumentEntry.dataValues, ' got entered');
+    });
+  });
+
+
   socket.on('get rooms info', id => {
     // send info to populate creaorjoin open room table
     io.to(`/#${id}`).emit('give rooms info', getRoomsInfo(rooms));
@@ -152,11 +235,108 @@ io.on('connection', socket => {
 });
 
 /* Routes */
+app.get('/logout', (req, res) => {
+  console.log('mysession', req.session);
+  if (req.session.userName) {
+    delete req.session.userName;
+  }
+  req.logout();
+  console.log('mysession after logout', req.session);
+  res.sendStatus(200);
+});
+
+app.post('/login', (req, res) => {
+  users.findAll({
+    where: {
+      userName: req.body.user,
+    }
+  }).then(person => {
+    if (person[0]===undefined) {
+      console.log('line 261 case caught');
+      console.log('BadLogin');
+      console.log('req.session', req.session);
+      res.send("");
+    } else {
+      console.log(person[0], 'Person[0]!!!');
+      const hash = bcrypt.hashSync(req.body.pass, person[0].dataValues.salt);
+      users.findAll({
+        where: {
+          userName: req.body.user,
+          password: hash
+        }
+      }).then(user => {
+        if (user.length > 0) {
+          instruments.findAll({ where: { userName: req.body.user } }).then(
+            userInstruments => {
+              return userInstruments.map(a => a.dataValues);
+            }).then(userInstrumentsList => {
+              console.log('line 281 case caught');
+              console.log("succ logged in", userInstrumentsList);
+              req.session.userName = req.body.user;
+              res.send(userInstrumentsList);
+            });
+        } else {
+          console.log('line 290 case caught');
+          console.log('BadLogin');
+          console.log('req.session', req.session);
+          res.send("");
+        }
+      });
+    }
+  });
+});
+
+
+app.post('/signup', (req, res) => {
+  users.findAll({
+    where: {
+      userName: req.body.user
+    }
+  }).then(user => {
+    if (user.length > 0) {
+      console.log('this is req.sesion', req.session);
+      res.send('UserAlreadyExists');
+    } else {
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.pass, salt);
+      users.create({
+        userName: req.body.user,
+        password: hash,
+        salt: salt,
+      }).then(entry => {
+        console.log(entry.dataValues, ' got entered');
+        req.session.userName = req.body.user;
+        res.send('SuccessSignup');
+      });
+    }
+  });
+});
+
+app.get('/auth/facebook', passport.authenticate('facebook'));
+
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successReturnToOrRedirect: '/',
+    failureRedirect: '/login'
+  }));
+
+app.get("/userLoggedInToMakeInst", (req, res) => {
+  res.send(req.session.userName||req.session.passport);
+});
+
+app.get("/fbLoggedIn?", (req, res) => {
+  console.log(req.session.passport);
+  res.send(req.session.passport?"true":"false")
+});
+
 
 app.get('*', (req, res) => {
+  console.log('Cookies: ', req.cookies);
+  console.log('req.session', req.session);
   const pathToIndex = path.join(pathToStaticDir, 'index.html');
   res.status(200).sendFile(pathToIndex);
 });
+
 
 /* Initialize */
 
