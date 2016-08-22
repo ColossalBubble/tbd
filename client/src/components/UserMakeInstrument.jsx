@@ -39,7 +39,7 @@ class UserMakeInstrument extends Component {
         console.log('youre not logged in!');
         this.context.router.push("login");
       } else {
-        this.logIn(resp,[]/*need to query db for instruments- or use middleware...*/);
+        this.logIn(resp, []/*need to query db for instruments- or use middleware...*/);
       }
     });
   }
@@ -52,19 +52,27 @@ class UserMakeInstrument extends Component {
   keyHelper(ID) {
     console.log(this.state.tryingToName);
     if (!this.state.tryingToName) {
+      console.log(ID, mapIdsToKeys[ID], this.state.inMemObject);
       const keyInfo=this.state.inMemObject[mapIdsToKeys[ID]];
-      console.log('keyinfo', keyInfo);
+      console.log('keyinfo', keyInfo, keyInfo===undefined);
+      console.log('runs regardless');
+
+      if (keyInfo===undefined) {
+      
+        showErrorMessage("#makeInstErrorMessages", 'Please Map To This Key', 'nonExistentMapError');
+      } else {
+
       $("#par1").val(keyInfo[1]);
       $("#par2").val(keyInfo[2]);
       $("#par3").val(keyInfo[3]);
       $("#par4").val(keyInfo[4]);
       this.sampleSound();
-
       $(ID).animate({
         backgroundColor: "black",
       }, 20).animate({
         backgroundColor: "white",
       }, 20);
+     }
     }
   }
 
@@ -123,6 +131,7 @@ class UserMakeInstrument extends Component {
 
   makeInstrument() {
     const name = $("#userInstName").val();
+    console.log()
     const currentInMemObj = this.state.inMemObject;
     currentInMemObj.name = name;
     currentInMemObj.userName = this.props.user;
@@ -263,7 +272,7 @@ class UserMakeInstrument extends Component {
             </select>
           </form>
         </div>
-        <button onClick={this.deleteKey}> Delete key </button><br /><br />
+        <RaisedButton label="Delete key" onClick={this.deleteKey} />  
         Select Some parameters:<br />
 
         Note: 
@@ -315,8 +324,8 @@ class UserMakeInstrument extends Component {
           <option value="triangle">triangle</option>
         </select> <br />
         
-        <RaisedButton label="Map That" onClick={this.mapThat} />
-        <TextField floatingLabelText="Name Your Instrument Here" onClick={this.killKeypress} /> <br /><br /> <br />
+        <RaisedButton label="Map That" onClick={this.mapThat} /><br />
+        Name instrument:<input id="userInstName" onClick={this.killKeypress} /> <br /><br /> <br />
         <RaisedButton label="Make the instrument broh" style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument.bind(this)} />
         <br />
         Your current Instrument in JSON form: <br />

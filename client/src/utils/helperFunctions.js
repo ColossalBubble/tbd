@@ -22,7 +22,7 @@ function showErrorMessage(appendTo, message, id) {
       '#4': 'F',
       '#5': 'G',
       '#6': 'H',
-      '#7': 'H',
+      '#7': 'J',
       '#8': 'K',
       '#9': 'L',
     };
