@@ -1,13 +1,14 @@
 // Modules
 import React, { Component } from 'react';
 import shortid from 'shortid';
-import io from 'socket.io-client';
+
 // Material UI
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import { Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 
-const socket = io();
+// Util
+import socket from '../utils/socket';
 
 class CreateOrJoin extends Component {
   constructor(props) {

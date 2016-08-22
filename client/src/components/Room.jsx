@@ -9,10 +9,7 @@ import Help from './Help';
 // Util
 import connectionManager from '../rtc';
 import store from '../instruments/store';
-
-const io = require('socket.io-client');
-
-const socket = io();
+import socket from '../utils/socket';
 
 class Room extends React.Component {
   constructor(props) {
@@ -53,7 +50,7 @@ class Room extends React.Component {
       this.context.router.push('/invalid');
     });
 
-    connectionManager.peerSocket().on('remove connection', id => {
+    socket.on('remove connection', id => {
       const dummyArr = this.state.peers.slice();
       for (let i = 0; i < dummyArr.length; i++) {
         if (dummyArr[i].peerId === id) {
@@ -101,19 +98,19 @@ class Room extends React.Component {
     // username could go in here
     const peerInfo = {
       instrument: this.state.instrument,
-      peerId: connectionManager.peerSocket().id,
+      peerId: socket.id,
       roomId: this.props.params.roomId,
     };
 
     // for join room update
-    connectionManager.peerSocket().emit('instrument select', peerInfo);
+    socket.emit('instrument select', peerInfo);
 
     // send own info out
-    connectionManager.peerSocket().emit('peer info', peerInfo);
+    socket.emit('peer info', peerInfo);
     // ask for info
-    connectionManager.peerSocket().emit('ask for peer info', peerInfo);
+    socket.emit('ask for peer info', peerInfo);
     // update/add peer connections
-    connectionManager.peerSocket().on('peer info', newPeerInfo => {
+    socket.on('peer info', newPeerInfo => {
       let newPeer = true;
 
       const arr = this.state.peers.slice();
@@ -135,10 +132,10 @@ class Room extends React.Component {
     });
 
     // send peer info to peer that requested it
-    connectionManager.peerSocket().on('ask for peer info', info => {
+    socket.on('ask for peer info', info => {
       // include peer id of peer that requested info
       peerInfo.sendTo = info.peerId;
-      connectionManager.peerSocket().emit('give peer info', peerInfo);
+      socket.emit('give peer info', peerInfo);
     });
   }
 

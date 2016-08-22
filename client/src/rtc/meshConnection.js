@@ -1,6 +1,8 @@
+import socket from '../utils/socket';
+
 const SimplePeer = require('simple-peer');
 const EventEmitter = require('events').EventEmitter;
-const io = require('socket.io-client');
+
 
 const emitter = new EventEmitter();
 const peers = {};
@@ -18,8 +20,6 @@ const options = {
     ]
   }
 };
-
-const socket = io();
 
 export default function (room) {
   let selfId;
