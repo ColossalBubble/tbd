@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 import { MembraneSynth } from "tone";
 import { showErrorMessage, mapIdsToKeys, mapKeysToIds } from '../utils/helperFunctions';
-
 const io = require('socket.io-client');
 
 const socket = io();
@@ -36,7 +39,7 @@ class UserMakeInstrument extends Component {
         console.log('youre not logged in!');
         this.context.router.push("login");
       } else {
-        this.logIn(resp,/*need to query db for instruments- or use middleware...*/);
+        this.logIn(resp,[]/*need to query db for instruments- or use middleware...*/);
       }
     });
   }
@@ -169,6 +172,19 @@ class UserMakeInstrument extends Component {
   }
 
   killKeypress() {
+    $(document).off();
+    $(document).off("keypress");
+    $("#1").finish();
+    $(".key").finish();
+    $("#1").off("keypress");
+    $(".key").off("keypress");
+    $("#1").off();
+    $(".key").off();
+    $("#1").stop();
+    $(".key").stop();
+    $("#1").clearQueue();
+    $(".key").clearQueue();
+
     console.log("keypress should be killed");
     $(document).off();
     $(document).off("keypress");
@@ -220,6 +236,8 @@ class UserMakeInstrument extends Component {
   }
 
 
+
+
   render() {
 
     console.log(this.props.userInstruments);
@@ -227,15 +245,7 @@ class UserMakeInstrument extends Component {
       <div id="UserMakeInstrumentRoom">
         <h1>Make Instrument here!</h1>
         <div id="currentInst" />
-        <br />Select an instrument to try out:
-
-        <div className="selectInst" id="selectInstID">
-          <form>
-            <select onChange={this.changeInst} name="insts">
-              <option value="MembraneSynth">MembraneSynth</option>
-            </select>
-          </form>
-        </div>
+    
         <br />
         <div className="selectKey" id="selectKeys_${id}">
            Select a Key to map to:
@@ -257,6 +267,7 @@ class UserMakeInstrument extends Component {
         Select Some parameters:<br />
 
         Note: 
+
         <select className="par" id="par1">
           <option value="A">A</option>
           <option value="B">B</option>
@@ -266,6 +277,8 @@ class UserMakeInstrument extends Component {
           <option value="F">F</option>
           <option value="G">G</option>
         </select><br />
+
+
         Octave
         <select className="par" id="par2">
           <option value="1">1</option>
@@ -301,10 +314,10 @@ class UserMakeInstrument extends Component {
           <option value="sawtooth">sawtooth</option>
           <option value="triangle">triangle</option>
         </select> <br />
-        <button id="sampleSound" className="sampleSound">Sample sound !</button>
-        <button onClick={this.mapThat}>Map that</button><br />
-        Name that:<input onClick={this.killKeypress} type="text" id="userInstName" /><br /><br /> <br />
-        <button style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument.bind(this)}>Make the Instrument!</button>
+        
+        <RaisedButton label="Map That" onClick={this.mapThat} />
+        <TextField floatingLabelText="Name Your Instrument Here" onClick={this.killKeypress} /> <br /><br /> <br />
+        <RaisedButton label="Make the instrument broh" style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument.bind(this)} />
         <br />
         Your current Instrument in JSON form: <br />
         {JSON.stringify(this.state.inMemObject)}<br />
@@ -339,3 +352,28 @@ UserMakeInstrument.childContextTypes = {
   muiTheme: React.PropTypes.object.isRequired,
 };
 export default UserMakeInstrument;
+
+
+
+
+  // <!--   <br />Select an instrument to try out:
+  
+  //       <div className="selectInst" id="selectInstID">
+  //         <form>
+  //           <select onChange={this.changeInst} name="insts">
+  //             <option value="MembraneSynth">MembraneSynth</option>
+  //           </select>
+  //         </form>
+  //       </div> -->
+
+
+
+
+
+
+
+
+
+
+
+
