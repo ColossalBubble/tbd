@@ -28,7 +28,9 @@ export default function (room) {
 
   // socket joined a room, start making connections
   socket.on('joined', sockets => {
-    selfId = sockets.pop().peerId;
+    if (sockets.length !== 0) {
+      selfId = sockets.pop().peerId;
+    }
     // if first one in room, done
     if (sockets.length === 0) {
       emitter.emit('connected');
