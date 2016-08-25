@@ -3,6 +3,7 @@ import React from 'react';
 import PeerBubble from './PeerBubble';
 
 const PeerBar = ({ peers, toggleInviteView, toggleSelectView }) => {
+
   const inviteNumber = 4 - peers.length;
   const inviteArray = [];
   for (let i = 0; i < inviteNumber; i++) {

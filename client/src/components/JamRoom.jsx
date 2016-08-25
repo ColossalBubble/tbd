@@ -29,7 +29,6 @@ class JamRoom extends Component {
   }
 
   render() {
-    console.log('inst your currently using', this.props.instrument);
     return (
       <div id="jamroom">
         <div id="display-inst-name"><h1>You are playing {this.props.instrument}</h1></div>

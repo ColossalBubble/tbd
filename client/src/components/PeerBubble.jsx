@@ -5,6 +5,7 @@ import { white } from 'material-ui/styles/colors';
 import InstrumentIcon, { KickDrumIcon } from '../icons';
 
 const PeerBubble = ({ peer, handleClick, self }) => (
+
   <div className="peer">
     <KickDrumIcon style={{ width: 200, height: 'auto' }} />
     {
@@ -32,6 +33,7 @@ const PeerBubble = ({ peer, handleClick, self }) => (
     }
   </div>
 );
+
 
 PeerBubble.propTypes = {
   peer: React.PropTypes.object.isRequired,

@@ -32,14 +32,11 @@ class UserMakeInstrument extends Component {
       this.sampleSound();
     });
 
-    $.get("/userLoggedInToMakeInst", (resp, err) => {
-    //  console.log(resp);
-      if (resp.length === 0) {
-       // console.log('youre not logged in!');
+    $.get("/getUserInfo", (resp, err) => {
+      console.log('this the the resp to userloggedintomakeinst', resp);
+      if (resp[0] === null) {
+        console.log('youre not logged in!');
         this.context.router.push("login");
-      } else {
-       // console.log('resp1,resp2', resp[0], resp[1]);
-        this.logIn(resp[0], resp[1]);
       }
     });
   }
@@ -52,7 +49,7 @@ class UserMakeInstrument extends Component {
   //  console.log(this.state.tryingToName);
     if (!this.state.tryingToName) {
      // console.log(ID, mapIdsToKeys[ID], this.state.inMemObject);
-      const keyInfo = this.state.inMemObject[mapIdsToKeys[ID]];
+      const keyInfo = JSON.parse(this.state.inMemObject[mapIdsToKeys[ID]]);
      // console.log('keyinfo', keyInfo, keyInfo===undefined);
       if (keyInfo === undefined) {
         showErrorMessage("#makeInstErrorMessages", 'Please Map To This Key', 'nonExistentMapError');
@@ -103,9 +100,9 @@ class UserMakeInstrument extends Component {
     const par3 = $("#par3").val();
     const par4 = $("#par4 option:selected").text();
     const key = $(".selectKey option:selected").text();
-    const inst = $(".selectInst option:selected").text();
+    const inst = "N/A";
     const currentInMemObj = this.state.inMemObject;
-    currentInMemObj[key] = [inst, par1, par2, par3, par4];
+    currentInMemObj[key] = JSON.stringify([inst, par1, par2, par3, par4]);
     if (!par1&&!par2&&!par3&&!par4) {
      // console.log('please make a proper mapping');
       showErrorMessage("#makeInstErrorMessages", 'Please make a Proper Mapping', 'propMapError');
@@ -118,6 +115,7 @@ class UserMakeInstrument extends Component {
         inMemObject: currentInMemObj
       });
     }
+    console.log(currentInMemObj);
     const idToAdd = mapKeysToIds[key];
     // console.log('idToAdd', idToAdd);
     $(idToAdd).css("border", "5px solid blue");
@@ -142,13 +140,15 @@ class UserMakeInstrument extends Component {
     } else if (empty) {
       showErrorMessage("#makeInstErrorMessages", 'Pls map some keys', 'npi');
      // console.log('youve not mapped any keys!!!');
+    } else if (/\W/.test(name)) {
+      showErrorMessage("#makeInstErrorMessages", 'Letters and numbers only please!', 'regexErr');
     } else {
       this.setState({
         inMemObject: {}
       });
       empty = true;
       this.props.socket.emit('newInstCreated', currentInMemObj);
-      console.log(`youve created ${JSON.stringify(currentInMemObj)}`);
+      console.log(`youve created ${currentInMemObj}`);
       const final = this.props.userInstruments.concat([currentInMemObj]);
       this.props.updateUserInstrument(final);
       showErrorMessage("#makeInstErrorMessages", 'InstrumentMade!', 'makeThat');
@@ -300,8 +300,7 @@ class UserMakeInstrument extends Component {
         <RaisedButton label="Map That" onClick={this.mapThat} /><br />
         Name instrument:<input id="userInstName" onClick={this.killKeypress} /> <br /><br /> <br />
         <RaisedButton label="Make the instrument broh" style={{ postion: "absolute", top: "50%" }} onClick={this.makeInstrument} /><br />
-        Your current Instrument in JSON form: <br />
-        {JSON.stringify(this.state.inMemObject)}<br />
+        <br />
         Your current Instrument in Piano form:
         <div onClick={this.addKeypress}>
           <UserOwnInstrument />
@@ -314,11 +313,10 @@ class UserMakeInstrument extends Component {
 
 UserMakeInstrument.propTypes = {
   params: React.PropTypes.object,
-  logIn: React.PropTypes.func.isRequired,
-  userInstruments: React.PropTypes.array.isRequired,
-  updateUserInstrument: React.PropTypes.func.isRequired,
-  user: React.PropTypes.string.isRequired,
-  socket: React.PropTypes.object
+  logIn: React.PropTypes.func,
+  userInstruments: React.PropTypes.array,
+  updateUserInstrument: React.PropTypes.func,
+  user: React.PropTypes.object,
 };
 
 UserMakeInstrument.contextTypes = {
