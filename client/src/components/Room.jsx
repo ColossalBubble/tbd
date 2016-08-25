@@ -1,6 +1,7 @@
 // Modules
 import React from 'react';
 import { MembraneSynth } from "tone";
+import $ from 'jquery';
 // Components
 import SelectInstrument from './SelectInstrument';
 import JamRoom from './JamRoom';
@@ -90,7 +91,7 @@ class Room extends React.Component {
         pitchDecay: pd||0.1,
         octaves: 7,
         oscillator: {
-          type: type,
+          type,
         },
         envelope: {
           attack: 0.001,
