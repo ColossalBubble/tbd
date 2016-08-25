@@ -140,7 +140,7 @@ class UserMakeInstrument extends Component {
     } else if (empty) {
       showErrorMessage("#makeInstErrorMessages", 'Pls map some keys', 'npi');
      // console.log('youve not mapped any keys!!!');
-    } else if (/\W/.test(name)===true) {
+    } else if (/\W/.test(name)) {
       showErrorMessage("#makeInstErrorMessages", 'Letters and numbers only please!', 'regexErr');
     } else {
       this.setState({
@@ -149,8 +149,8 @@ class UserMakeInstrument extends Component {
       empty = true;
       this.props.socket.emit('newInstCreated', currentInMemObj);
       console.log(`youve created ${currentInMemObj}`);
-       const final = this.props.userInstruments.concat([currentInMemObj]);
-       this.props.updateUserInstrument(final);
+      const final = this.props.userInstruments.concat([currentInMemObj]);
+      this.props.updateUserInstrument(final);
       showErrorMessage("#makeInstErrorMessages", 'InstrumentMade!', 'makeThat');
       $("#par1").val("A");
       $("#par2").val("1");
