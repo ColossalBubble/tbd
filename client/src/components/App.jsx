@@ -65,6 +65,7 @@ class App extends Component {
     this.setState({
       loggedIn: false,
       user: "",
+      userInstruments: [],
     });
   }
 
