@@ -19,6 +19,7 @@ class AppNavBar extends Component {
     });
   }
 
+  // this is written so that passport can do auth and not throw a react warning
   FBAuth(e) {
     e.preventDefault();
     const linkTag = $('<a href="/auth/facebook"></a>');
