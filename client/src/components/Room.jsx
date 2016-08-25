@@ -260,7 +260,7 @@ class Room extends React.Component {
 
 Room.propTypes = {
   params: React.PropTypes.object,
-  userInstruments: React.PropTypes.func.isRequired,
+  userInstruments: React.PropTypes.array,
   socket: React.PropTypes.object,
   logIn: React.PropTypes.func
 };
