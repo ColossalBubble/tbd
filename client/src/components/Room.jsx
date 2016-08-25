@@ -205,7 +205,7 @@ class Room extends React.Component {
 
   render() {
     const uiNames=this.props.userInstruments.map(a => (a.instrumentName));
-     console.log('what you want', uiNames, 'tsi', 'current instrument', this.state.instrument);
+    console.log('what you want', uiNames, 'tsi', 'current instrument', this.state.instrument);
 
     return (
       <div>
@@ -259,7 +259,7 @@ class Room extends React.Component {
 
 Room.propTypes = {
   params: React.PropTypes.object,
-  userInstruments: React.PropTypes.func.isRequired,
+  userInstruments: React.PropTypes.array,
   socket: React.PropTypes.object,
   logIn: React.PropTypes.func
 };
