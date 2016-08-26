@@ -36,6 +36,13 @@ class JamRoom extends Component {
         <div>
           {this.props.instrument === 'drums' ? <Drums /> : null}
           {this.props.instrument === 'piano' ? <Piano /> : null}
+          {
+            this.props.instrument === 'laserbells' ?
+              <div id="laser">
+                <img src="/assets/laser.svg" style={{ width: 'auto', height: '500px' }} />
+              </div> :
+              null
+          }
           {this.props.instrument.slice(0, 4) === "Your"? <div id="UOIInRoom"><UserOwnInstrument /></div> :null}
         </div>
         <PeerBar

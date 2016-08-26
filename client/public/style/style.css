@@ -62,6 +62,11 @@ body {
   height: 100%;
 }
 
+#laser {
+  text-align: center;
+  width: 100%;
+}
+
 #userPiano {
   position: relative;
   top: 370px;
