@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import AppBar from 'material-ui/AppBar';
 import $ from "jquery";
+// import $ from "jquery";
+import { Link } from 'react-router';
 import NavMenuIcon from './NavMenuIcon';
 
 class AppNavBar extends Component {
