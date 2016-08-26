@@ -1,4 +1,3 @@
-// import $ from 'jquery';
 // Tones
 import React, { Component } from 'react';
 import { MembraneSynth } from "tone";
