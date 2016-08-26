@@ -30,7 +30,6 @@ class JamRoom extends Component {
   }
 
   render() {
-    console.log(this.props.extraInstruments);
     return (
       <div id="jamroom">
         <div>
@@ -39,7 +38,7 @@ class JamRoom extends Component {
           {
             this.props.instrument === 'laserbells' ?
               <div id="laser">
-                <img src="/assets/laser.svg" style={{ width: 'auto', height: '500px' }} />
+                <img src="/assets/laser.svg" alt="laserbells" style={{ height: '100%' }} />
               </div> :
               null
           }
