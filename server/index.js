@@ -78,8 +78,7 @@ passport.use(new FacebookStrategy(fbConfig, (accessToken, refreshToken, profile,
 // serialize and deserialize
 passport.serializeUser((user, done) => {
   const final = typeof user==="number"?user:user[0].dataValues.id;
-  console.log('this is the user param', user);
-  console.log('serializing!!!', final);
+  console.log('this is the user param serializing', user);
   done(null, final);
 });
 
@@ -211,20 +210,20 @@ io.on('connection', socket => {
     io.to(`/#${answer.to}`).emit('answer', answer);
   });
 
-  socket.on('newInstCreated', instrument => {
-    console.log('this is a brand new instrument', instrument, instrument.A);
+  socket.on('newInstCreated', i => {
+    console.log('this is a brand new instrument', i, i.A);
     instruments.create({
-      userName: instrument.userName,
-      instrumentName: instrument.name,
-      A: instrument.A,
-      S: instrument.S,
-      D: instrument.D,
-      F: instrument.F,
-      G: instrument.G,
-      H: instrument.H,
-      J: instrument.J,
-      K: instrument.K,
-      L: instrument.L,
+      userName: i.userName,
+      instrumentName: i.name,
+      A: i.A,
+      S: i.S,
+      D: i.D,
+      F: i.F,
+      G: i.G,
+      H: i.H,
+      J: i.J,
+      K: i.K,
+      L: i.L,
     }).then(instrumentEntry => {
       console.log(instrumentEntry.dataValues, ' got entered');
     });
