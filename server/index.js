@@ -212,6 +212,7 @@ io.on('connection', socket => {
 
   socket.on('newInstCreated', i => {
     console.log('this is a brand new instrument', i, i.A);
+    // THIS CAN SIMPLY BE REPLACED WITH I!!!!
     instruments.create({
       userName: i.userName,
       instrumentName: i.name,
